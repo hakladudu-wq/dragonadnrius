@@ -18,7 +18,19 @@ import {
   Zap,
   Home,
   ChevronRight,
+  User,
+  Crown,
 } from "lucide-react"
+
+// Icone customizado: bonequinho com coroinha em cima (representa o ranking de usuarios)
+function RankIcon({ className }: { className?: string }) {
+  return (
+    <span className={cn("relative inline-flex items-center justify-center", className)}>
+      <Crown className="absolute -top-2 left-1/2 -translate-x-1/2 h-[11px] w-[11px]" />
+      <User className="h-full w-full" />
+    </span>
+  )
+}
 
 interface AdminSession {
   email: string
@@ -28,6 +40,12 @@ interface AdminSession {
 
 // Menu reorganizado: Dashboard > Usuarios > Bots > Analytics > Financeiro
 const menuItems = [
+  {
+    section: "Destaque",
+    items: [
+      { icon: RankIcon, label: "Ranking de Usuarios", href: "/dragonadm/ranking" },
+    ]
+  },
   { 
     section: "Principal",
     items: [
