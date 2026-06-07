@@ -20,8 +20,20 @@ import {
   LogOut,
   Target,
   Users,
+  Crown,
+  User,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
+
+// Icone customizado: bonequinho com uma coroinha em cima (ranking de usuarios)
+function RankIcon({ className }: { className?: string }) {
+  return (
+    <span className={cn("relative inline-flex items-center justify-center", className)}>
+      <Crown className="absolute -top-2 left-1/2 -translate-x-1/2 h-[11px] w-[11px]" />
+      <User className="h-full w-full" />
+    </span>
+  )
+}
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -32,7 +44,7 @@ type NavItem = {
   label: string
   description: string
   href: string
-  icon: LucideIcon
+  icon: LucideIcon | ((props: { className?: string }) => JSX.Element)
   locked?: boolean
 }
 
@@ -42,6 +54,12 @@ type NavSection = {
 }
 
 const navSections: NavSection[] = [
+  {
+    category: "DESTAQUE",
+    items: [
+      { label: "Ranking", description: "Top vendedores da Dragon", href: "/ranking", icon: RankIcon },
+    ],
+  },
   {
     category: "MENU",
     items: [
