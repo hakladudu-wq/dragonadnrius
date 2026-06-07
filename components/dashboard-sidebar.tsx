@@ -15,6 +15,7 @@ import {
   LinkIcon,
   Gift,
   Trophy,
+  LifeBuoy,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -89,6 +90,12 @@ const navSections: NavSection[] = [
     items: [
       { label: "Indique e Ganhe", description: "Convide amigos", href: "/referral", icon: Gift },
       { label: "Premiacoes", description: "Conquistas e premios", href: "/rewards", icon: Trophy },
+    ],
+  },
+  {
+    category: "SUPORTE",
+    items: [
+      { label: "Suporte", description: "WhatsApp e denuncias", href: "/suporte", icon: LifeBuoy },
     ],
   },
 ]

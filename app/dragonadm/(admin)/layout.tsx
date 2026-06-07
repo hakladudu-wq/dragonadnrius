@@ -18,6 +18,7 @@ import {
   Zap,
   Home,
   ChevronRight,
+  LifeBuoy,
   User,
   Crown,
 } from "lucide-react"
@@ -75,6 +76,7 @@ const menuItems = [
   { 
     section: "Sistema",
     items: [
+      { icon: LifeBuoy, label: "Suporte", href: "/dragonadm/suporte" },
       { icon: FileText, label: "Termos", href: "/dragonadm/termos" },
     ]
   },
