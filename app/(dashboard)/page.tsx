@@ -36,6 +36,7 @@ import { useTheme } from "next-themes"
 import { useBots } from "@/lib/bot-context"
 import { useAuth } from "@/lib/auth-context"
 import { NoBotSelected } from "@/components/no-bot-selected"
+import { DashboardRanking } from "@/components/dashboard-ranking"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { ChatDialog } from "@/components/chat/chat-dialog"
@@ -581,8 +582,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Bottom Section - Tabela + Ranking lado a lado */}
+        <div className="mt-5 grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-4 mb-4 items-stretch">
         {/* Bottom Table Section */}
-        <div className="mt-5 bg-card rounded-[24px] p-6 shadow-sm border border-border mb-4">
+        <div className="bg-card rounded-[24px] p-6 shadow-sm border border-border">
           {/* Table Header */}
           <div className="flex flex-row justify-between items-center mb-6 gap-3">
             <div className="flex items-center gap-2">
@@ -753,6 +756,10 @@ export default function DashboardPage() {
               </tbody>
             </table>
           </div>
+        </div>
+
+          {/* Ranking Top 5 */}
+          <DashboardRanking />
         </div>
       </div>
 
