@@ -66,7 +66,7 @@ function revenuePill(position: number) {
 
 export function DashboardRanking() {
   const { session } = useAuth()
-  const [tab, setTab] = useState<"concurso" | "mensal">("concurso")
+  const [tab, setTab] = useState<"concurso" | "mensal">("mensal")
   const [hideValues, setHideValues] = useState(false)
 
   const { data, isLoading } = useSWR<{ ranking: RankedUser[] }>(
@@ -131,7 +131,15 @@ export function DashboardRanking() {
 
       {/* Lista */}
       <div className="flex-1 overflow-y-auto -mx-1 px-1 space-y-2 max-h-[380px]">
-        {isLoading ? (
+        {tab === "concurso" ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <Trophy className="h-9 w-9 text-muted-foreground/40 mb-2" />
+            <p className="text-sm text-muted-foreground">Nenhum concurso ativo</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">
+              Em breve, disputas por prêmios
+            </p>
+          </div>
+        ) : isLoading ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="h-6 w-6 text-rose-400 animate-spin" />
           </div>
