@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useAuth } from "@/lib/auth-context"
+import { useBots } from "@/lib/bot-context"
+import { RecentConversations } from "@/components/recent-conversations"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { 
