@@ -308,6 +308,43 @@ textarea[class*="bg-[#0"] {
   color-scheme: dark !important;
 }
 
+/* Scoped light theme for full-screen editors (Dragon Sites, Redirecionamento, etc.)
+   These editors are designed on a white canvas. The app is forced-dark globally,
+   so we re-declare the light tokens locally to stop shadcn inputs/tabs from
+   inheriting the dark theme (which caused washed-out gray inputs). */
+.editor-light {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 78 85% 55%;
+  --accent-foreground: 0 0% 9%;
+  --border: 0 0% 92%;
+  --input: 0 0% 92%;
+  --ring: 78 85% 55%;
+  color-scheme: light;
+}
+
+.editor-light input,
+.editor-light textarea,
+.editor-light select {
+  color-scheme: light;
+  caret-color: #111827;
+}
+
+.editor-light input::placeholder,
+.editor-light textarea::placeholder {
+  color: #9ca3af;
+}
+
 input[class*="bg-[#2"]:-webkit-autofill,
 input[class*="bg-[#2"]:-webkit-autofill:hover,
 input[class*="bg-[#2"]:-webkit-autofill:focus,
