@@ -138,7 +138,7 @@ body: JSON.stringify({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="editor-light min-h-screen bg-gray-50 flex text-foreground">
       {/* Sidebar Editor */}
       <div className="w-[400px] bg-white border-r flex flex-col">
         {/* Header */}

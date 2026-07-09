@@ -21,20 +21,9 @@ import {
   LogOut,
   Target,
   Users,
-  Crown,
-  User,
+  Shuffle,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
-
-// Icone customizado: bonequinho com uma coroinha em cima (ranking de usuarios)
-function RankIcon({ className }: { className?: string }) {
-  return (
-    <span className={cn("relative inline-flex items-center justify-center", className)}>
-      <Crown className="absolute -top-2 left-1/2 -translate-x-1/2 h-[11px] w-[11px]" />
-      <User className="h-full w-full" />
-    </span>
-  )
-}
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -55,12 +44,6 @@ type NavSection = {
 }
 
 const navSections: NavSection[] = [
-  {
-    category: "DESTAQUE",
-    items: [
-      { label: "Ranking", description: "Top vendedores da Dragon", href: "/ranking", icon: RankIcon },
-    ],
-  },
   {
     category: "MENU",
     items: [
@@ -83,6 +66,12 @@ const navSections: NavSection[] = [
       { label: "Gateways", description: "Pagamentos PIX", href: "/gateways", icon: CreditCard },
       { label: "Dragon Sites", description: "Crie paginas de conversao", href: "/biolink", icon: LinkIcon },
       { label: "Trackeamento", description: "Pixels e UTMs", href: "/tracking", icon: Target },
+    ],
+  },
+  {
+    category: "REDIRECIONAMENTO",
+    items: [
+      { label: "Redirecionamento", description: "Redirects e ferramentas de link", href: "/redirecionamento", icon: Shuffle },
     ],
   },
   {
@@ -266,11 +255,15 @@ export function DashboardSidebar({ onNavigate, defaultCollapsed = false }: Dashb
                         "group relative flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200",
                         collapsed && "justify-center px-0",
                         isActive
-                          ? "bg-foreground text-background shadow-[0_8px_20px_-6px_hsl(var(--accent)/0.5)]"
+                          ? "bg-accent/10 text-accent"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       )}
                     >
                       {/* Active indicator bar */}
+                      {isActive && !collapsed && (
+                        <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-accent" />
+                      )}
+
                       <span className={cn(
                         "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
                         collapsed ? "h-9 w-9" : "",
@@ -285,7 +278,7 @@ export function DashboardSidebar({ onNavigate, defaultCollapsed = false }: Dashb
                         <span className={cn(
                           "text-[13px] font-medium truncate transition-colors duration-200",
                           isActive
-                            ? "text-background"
+                            ? "text-accent"
                             : "text-muted-foreground group-hover:text-foreground"
                         )}>
                           {item.label}

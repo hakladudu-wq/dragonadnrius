@@ -662,30 +662,6 @@ export default function BioLinkPage() {
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
             </button>
-
-            {/* Redirecionamento */}
-            <button 
-              onClick={() => handleSelectPresellType("redirect")}
-              disabled={creating}
-              className="group bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
-                <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                  <polyline points="15 3 21 3 21 9"/>
-                  <line x1="10" y1="14" x2="21" y2="3"/>
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-foreground mb-0.5">
-                  Redirecionamento
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  Pagina com redirect automatico
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-            </button>
           </div>
 
           {creating && (

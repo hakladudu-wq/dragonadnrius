@@ -296,7 +296,7 @@ body: JSON.stringify({
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="editor-light flex flex-col h-full overflow-hidden bg-white text-foreground">
       {/* Top Header */}
       <header className="h-14 border-b border-gray-200 flex items-center justify-between px-4 bg-white flex-shrink-0">
         <div className="flex items-center gap-3">
