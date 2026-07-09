@@ -19,6 +19,7 @@ import { useBots } from "@/lib/bot-context"
 import { useAuth } from "@/lib/auth-context"
 import { NoBotSelected } from "@/components/no-bot-selected"
 import { DashboardRanking } from "@/components/dashboard-ranking"
+import { DashboardRewards } from "@/components/dashboard-rewards"
 import { DashboardPerformanceChart } from "@/components/dashboard-performance-chart"
 import { DashboardActivityLog } from "@/components/dashboard-activity-log"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -280,9 +281,10 @@ export default function DashboardPage() {
           <DashboardPerformanceChart userId={userId} />
         </div>
 
-        {/* Log de Atividades (tempo real) + Ranking */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-4 items-stretch">
+        {/* Log de Atividades + Premiações + Top do Mês */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
           <DashboardActivityLog botId={selectedBot?.id} />
+          <DashboardRewards />
           <DashboardRanking />
         </div>
       </div>

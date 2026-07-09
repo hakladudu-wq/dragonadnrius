@@ -86,9 +86,9 @@ export function DashboardRanking() {
             <Crown className="h-5 w-5 text-rose-400" />
           </div>
           <div>
-            <h3 className="font-bold text-foreground leading-tight">Top 5 Players</h3>
+            <h3 className="font-bold text-foreground leading-tight">Top do Mês</h3>
             <p className="text-[10px] font-medium tracking-[0.15em] text-muted-foreground uppercase">
-              Corrida de Faturamento
+              Top do Mês
             </p>
           </div>
         </div>
