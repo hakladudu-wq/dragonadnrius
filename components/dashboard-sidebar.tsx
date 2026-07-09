@@ -248,11 +248,15 @@ export function DashboardSidebar({ onNavigate, defaultCollapsed = false }: Dashb
                         "group relative flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200",
                         collapsed && "justify-center px-0",
                         isActive
-                          ? "bg-foreground text-background shadow-[0_8px_20px_-6px_hsl(var(--accent)/0.5)]"
+                          ? "bg-accent/10 text-accent"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       )}
                     >
                       {/* Active indicator bar */}
+                      {isActive && !collapsed && (
+                        <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-accent" />
+                      )}
+
                       <span className={cn(
                         "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-200",
                         collapsed ? "h-9 w-9" : "",
@@ -267,7 +271,7 @@ export function DashboardSidebar({ onNavigate, defaultCollapsed = false }: Dashb
                         <span className={cn(
                           "text-[13px] font-medium truncate transition-colors duration-200",
                           isActive
-                            ? "text-background"
+                            ? "text-accent"
                             : "text-muted-foreground group-hover:text-foreground"
                         )}>
                           {item.label}
