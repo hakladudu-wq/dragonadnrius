@@ -4,8 +4,6 @@ import { useState, useEffect } from "react"
 import useSWR from "swr"
 import {
   Search,
-  Moon,
-  Sun,
   Settings,
   Calendar,
 
@@ -32,7 +30,6 @@ import {
   User,
 } from "lucide-react"
 import Link from "next/link"
-import { useTheme } from "next-themes"
 import { useBots } from "@/lib/bot-context"
 import { useAuth } from "@/lib/auth-context"
 import { NoBotSelected } from "@/components/no-bot-selected"
@@ -129,7 +126,6 @@ const fetcher = (url: string) => fetch(url).then(res => res.json())
 export default function DashboardPage() {
   const { selectedBot, bots, setSelectedBot } = useBots()
   const { session } = useAuth()
-  const { theme, setTheme } = useTheme()
   const [selectedDateRange, setSelectedDateRange] = useState("7days")
   
   const [dateRange, setDateRange] = useState<DateRange | undefined>(getPresetDateRange("7days"))
@@ -217,12 +213,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="w-10 h-10 bg-card rounded-full flex items-center justify-center text-muted-foreground shadow-sm hover:bg-muted transition-colors"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
           <Link href="/bots">
             <button className="w-10 h-10 bg-accent/30 rounded-full flex items-center justify-center text-accent-foreground shadow-sm hover:bg-accent/40 transition-colors">
               <Bot size={18} />
