@@ -8,10 +8,7 @@ import {
   Plus,
   Check,
   Bot,
-  MessageSquare,
   Clock,
-  List,
-  User,
   DollarSign,
   TrendingUp,
   Zap,
@@ -23,9 +20,8 @@ import { useAuth } from "@/lib/auth-context"
 import { NoBotSelected } from "@/components/no-bot-selected"
 import { DashboardRanking } from "@/components/dashboard-ranking"
 import { DashboardPerformanceChart } from "@/components/dashboard-performance-chart"
+import { DashboardActivityLog } from "@/components/dashboard-activity-log"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { ChatDialog } from "@/components/chat/chat-dialog"
 
 // Presets de periodo (simples, como a referencia)
 const periodOptions = [
@@ -38,23 +34,6 @@ const periodOptions = [
 
 // Fetcher para SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
-
-interface Conversation {
-  id: string
-  nome: string
-  telegram: string
-  telegramUserId: string
-  telegramChatId: string
-  mensagens: number
-  status: string
-  statusLabel: string
-  tempoResposta: string
-  resultado: string
-  resultadoTipo: string
-  fluxo: string | null
-  iniciadoEm: string
-  ultimaAtividade: string
-}
 
 function formatBRL(value: number) {
   return value.toLocaleString("pt-BR", {
@@ -100,18 +79,12 @@ export default function DashboardPage() {
   const { selectedBot, bots, setSelectedBot } = useBots()
   const { session } = useAuth()
   const [period, setPeriod] = useState("today")
-  const [tablePeriod, setTablePeriod] = useState("month")
-  const [chatOpen, setChatOpen] = useState(false)
-  const [selectedChatUserId, setSelectedChatUserId] = useState<string | null>(null)
 
   const userId = session?.user?.id || session?.userId
 
-  // Conversas recentes
-  const { data: conversationsData, isLoading: loadingConversations } = useSWR<{
-    conversations: Conversation[]
-    total: number
-  }>(
-    selectedBot ? `/api/conversations?bot_id=${selectedBot.id}&period=${tablePeriod}` : null,
+  // Total de starts (leads que iniciaram conversa) - usa a contagem da API de conversas
+  const { data: conversationsData } = useSWR<{ total: number }>(
+    selectedBot ? `/api/conversations?bot_id=${selectedBot.id}&period=month` : null,
     fetcher,
     { refreshInterval: 30000 },
   )
@@ -138,8 +111,6 @@ export default function DashboardPage() {
   const taxaConversao = totalPix > 0 ? (aprovados / totalPix) * 100 : 0
   const ticketMedio = aprovados > 0 ? faturamento / aprovados : 0
   const totalStarts = conversationsData?.total || 0
-
-  const conversations = conversationsData?.conversations || []
 
   if (!selectedBot) {
     return <NoBotSelected />
@@ -309,188 +280,12 @@ export default function DashboardPage() {
           <DashboardPerformanceChart userId={userId} />
         </div>
 
-        {/* Tabela + Ranking */}
+        {/* Log de Atividades (tempo real) + Ranking */}
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-4 items-stretch">
-          {/* Conversas Recentes */}
-          <div className="bg-card rounded-3xl p-6 shadow-sm border border-border">
-            <div className="flex flex-row justify-between items-center mb-6 gap-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
-                  <List size={16} className="text-foreground" />
-                </div>
-                <h3 className="font-semibold text-foreground text-lg">Conversas Recentes</h3>
-              </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-secondary px-3 py-1.5 rounded-lg border border-border hover:bg-muted transition-colors">
-                    {tablePeriod === "week" ? "Semana" : tablePeriod === "month" ? "Mês" : "Ano"}
-                    <ChevronDown size={14} />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-32 p-2" align="end">
-                  <div className="flex flex-col gap-1">
-                    {[
-                      { label: "Semana", value: "week" },
-                      { label: "Mês", value: "month" },
-                      { label: "Ano", value: "year" },
-                    ].map((p) => (
-                      <button
-                        key={p.value}
-                        onClick={() => setTablePeriod(p.value)}
-                        className={`px-3 py-1.5 rounded text-xs text-left transition-colors ${
-                          tablePeriod === p.value
-                            ? "bg-secondary text-foreground font-medium"
-                            : "hover:bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {p.label}
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[600px]">
-                <thead>
-                  <tr className="text-xs text-muted-foreground border-b border-border">
-                    <th className="pb-3 font-medium px-2">Usuário</th>
-                    <th className="pb-3 font-medium px-2">Mensagens</th>
-                    <th className="pb-3 font-medium px-2">Status</th>
-                    <th className="pb-3 font-medium px-2">Tempo de Resposta</th>
-                    <th className="pb-3 font-medium px-2">Resultado</th>
-                    <th className="pb-3 font-medium px-2 text-right">Ação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loadingConversations ? (
-                    <tr>
-                      <td colSpan={6} className="py-8 text-center text-sm text-muted-foreground">
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                          Carregando conversas...
-                        </div>
-                      </td>
-                    </tr>
-                  ) : conversations.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="py-8 text-center text-sm text-muted-foreground">
-                        Nenhuma conversa registrada ainda
-                      </td>
-                    </tr>
-                  ) : (
-                    conversations.map((conv) => (
-                      <tr
-                        key={conv.id}
-                        className="border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer"
-                        onClick={() => {
-                          setSelectedChatUserId(conv.telegramUserId)
-                          setChatOpen(true)
-                        }}
-                      >
-                        <td className="py-4 px-2">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                              <User size={16} className="text-foreground" />
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="text-sm font-medium text-foreground">{conv.nome}</span>
-                              <span className="text-xs text-muted-foreground">{conv.telegram}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-2">
-                          <div className="flex items-center gap-2">
-                            <MessageSquare size={14} className="text-muted-foreground" />
-                            <span className="text-sm text-foreground">{conv.mensagens}</span>
-                            {conv.fluxo && (
-                              <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full truncate max-w-[100px]">
-                                {conv.fluxo}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="py-4 px-2">
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                              conv.status === "ativo"
-                                ? "bg-green-500/20 text-green-400"
-                                : conv.status === "aguardando"
-                                  ? "bg-yellow-500/20 text-yellow-400"
-                                  : conv.status === "concluido"
-                                    ? "bg-blue-500/20 text-blue-400"
-                                    : "bg-muted text-muted-foreground"
-                            }`}
-                          >
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                conv.status === "ativo"
-                                  ? "bg-green-500"
-                                  : conv.status === "aguardando"
-                                    ? "bg-yellow-500"
-                                    : conv.status === "concluido"
-                                      ? "bg-blue-500"
-                                      : "bg-muted-foreground"
-                              }`}
-                            />
-                            {conv.statusLabel}
-                          </span>
-                        </td>
-                        <td className="py-4 px-2">
-                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                            <Clock size={14} />
-                            {conv.tempoResposta}
-                          </div>
-                        </td>
-                        <td className="py-4 px-2">
-                          <span
-                            className={`text-sm font-medium ${
-                              conv.resultadoTipo === "positivo"
-                                ? "text-green-400"
-                                : conv.resultadoTipo === "negativo"
-                                  ? "text-red-400"
-                                  : "text-muted-foreground"
-                            }`}
-                          >
-                            {conv.resultado}
-                          </span>
-                        </td>
-                        <td className="py-4 px-2 text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setSelectedChatUserId(conv.telegramUserId)
-                              setChatOpen(true)
-                            }}
-                            className="gap-1.5"
-                          >
-                            <MessageSquare size={14} />
-                            Abrir Chat
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Ranking Top 5 */}
+          <DashboardActivityLog botId={selectedBot?.id} />
           <DashboardRanking />
         </div>
       </div>
-
-      {/* Chat Dialog */}
-      <ChatDialog
-        open={chatOpen}
-        onOpenChange={setChatOpen}
-        botId={selectedBot?.id}
-        initialUserId={selectedChatUserId || undefined}
-      />
     </div>
   )
 }
