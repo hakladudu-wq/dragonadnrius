@@ -83,9 +83,9 @@ export default function DashboardPage() {
 
   const userId = session?.user?.id || session?.userId
 
-  // Total de starts (leads que iniciaram conversa) - usa a contagem da API de conversas
-  const { data: conversationsData } = useSWR<{ total: number }>(
-    selectedBot ? `/api/conversations?bot_id=${selectedBot.id}&period=month` : null,
+  // Total de starts (leads que iniciaram conversa) - contagem exata respeitando o periodo
+  const { data: startsData } = useSWR<{ total: number }>(
+    selectedBot ? `/api/starts?bot_id=${selectedBot.id}&period=${period}` : null,
     fetcher,
     { refreshInterval: 30000 },
   )
@@ -111,7 +111,7 @@ export default function DashboardPage() {
   const totalPix = stats?.total || 0
   const taxaConversao = totalPix > 0 ? (aprovados / totalPix) * 100 : 0
   const ticketMedio = aprovados > 0 ? faturamento / aprovados : 0
-  const totalStarts = conversationsData?.total || 0
+  const totalStarts = startsData?.total || 0
 
   if (!selectedBot) {
     return <NoBotSelected />
