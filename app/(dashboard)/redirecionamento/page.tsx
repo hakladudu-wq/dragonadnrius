@@ -14,6 +14,7 @@ import {
 import { useAuth } from "@/lib/auth-context"
 import { Shuffle, Plus, ExternalLink, Copy, Edit3, Trash2, MoreHorizontal, Loader2, Eye } from "lucide-react"
 import { toast } from "sonner"
+import { CreateRedirectModal } from "@/components/redirect/create-redirect-modal"
 
 type RedirectSite = {
   id: string
@@ -33,8 +34,8 @@ export default function RedirecionamentoPage() {
   const router = useRouter()
   const [sites, setSites] = useState<RedirectSite[]>([])
   const [loading, setLoading] = useState(true)
-  const [creating, setCreating] = useState(false)
   const [origin, setOrigin] = useState("")
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     setOrigin(window.location.origin)
@@ -60,43 +61,9 @@ export default function RedirecionamentoPage() {
     }
   }
 
-  const handleCreate = async () => {
-    if (!session?.userId) return
-    setCreating(true)
-
-    const timestamp = Date.now()
-    const autoName = `Redirecionamento ${new Date().toLocaleDateString("pt-BR")}`
-    const autoSlug = `presell-redirect-${timestamp}`
-
-    try {
-      const res = await fetch("/api/dragon-bio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: session.userId,
-          userEmail: session.email,
-          userName: session.name,
-          nome: autoName,
-          slug: autoSlug,
-          template: "buttons",
-          presell_type: "redirect",
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        toast.error(data.error || "Erro ao criar redirect")
-        setCreating(false)
-        return
-      }
-
-      router.push(`/presell-editor/${data.site.id}?type=redirect`)
-    } catch (error) {
-      console.error("Erro ao criar redirect:", error)
-      toast.error("Erro ao criar redirect")
-      setCreating(false)
-    }
+  const handleCreated = (siteId: string) => {
+    fetchSites()
+    router.push(`/presell-editor/${siteId}?type=redirect`)
   }
 
   const handleCopyLink = (slug: string) => {
@@ -138,11 +105,10 @@ export default function RedirecionamentoPage() {
               </div>
             </div>
             <Button
-              onClick={handleCreate}
-              disabled={creating}
+              onClick={() => setShowCreateModal(true)}
               className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold rounded-xl"
             >
-              {creating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+              <Plus className="mr-2 h-4 w-4" />
               Criar Redirect
             </Button>
           </div>
@@ -176,11 +142,10 @@ export default function RedirecionamentoPage() {
                 </p>
               </div>
               <Button
-                onClick={handleCreate}
-                disabled={creating}
+                onClick={() => setShowCreateModal(true)}
                 className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold rounded-xl"
               >
-                {creating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                <Plus className="mr-2 h-4 w-4" />
                 Criar Redirect
               </Button>
             </div>
@@ -247,6 +212,16 @@ export default function RedirecionamentoPage() {
           )}
         </div>
       </div>
+
+      <CreateRedirectModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
+        userId={session?.userId}
+        userEmail={session?.email}
+        userName={session?.name}
+        origin={origin}
+        onCreated={handleCreated}
+      />
     </ScrollArea>
   )
 }
