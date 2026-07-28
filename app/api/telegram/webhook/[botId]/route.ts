@@ -2,6 +2,7 @@ import { NextRequest } from "next/server"
 import { getSupabase, getSupabaseAdmin } from "@/lib/supabase"
 import { createPixPayment } from "@/lib/payments/gateways/mercadopago"
 import { parseUtmFromStart, saveTrackingUser, trackEvent } from "@/lib/tracking"
+import { isSimulating, captureOutgoing } from "@/lib/telegram-simulation"
 
 // ---------------------------------------------------------------------------
 // Helper: Sanitizar HTML para Telegram
