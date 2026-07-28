@@ -1,4 +1,5 @@
 import { createPixPayment as mercadoPagoCreatePix, checkPaymentStatus as mercadoPagoCheckStatus } from "./gateways/mercadopago"
+import { createPixPayment as nexusPagCreatePix, checkPaymentStatus as nexusPagCheckStatus } from "./gateways/nexuspag"
 
 export interface CreatePaymentInput {
   gateway: string
@@ -30,6 +31,14 @@ export async function createPayment(input: CreatePaymentInput): Promise<PaymentR
         payerEmail,
       })
 
+    case "nexuspag":
+      return nexusPagCreatePix({
+        accessToken,
+        amount,
+        description,
+        payerEmail,
+      })
+
     // Adicionar outros gateways aqui no futuro
     // case "stripe":
     //   return stripeCreatePayment(...)
@@ -53,6 +62,9 @@ export async function checkPaymentStatus(gateway: string, accessToken: string, p
   switch (gateway) {
     case "mercadopago":
       return mercadoPagoCheckStatus(accessToken, paymentId)
+
+    case "nexuspag":
+      return nexusPagCheckStatus(accessToken, paymentId)
 
     default:
       return "error"

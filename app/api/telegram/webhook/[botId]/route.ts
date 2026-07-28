@@ -1116,17 +1116,22 @@ async function processUpdate(botId: string, update: Record<string, unknown>) {
           return
         }
 
-        // Verificar status no Mercado Pago
+        // Verificar status no gateway ativo (Mercado Pago OU NexusPag)
         const { data: gateway } = await supabase
           .from("user_gateways")
           .select("access_token")
           .eq("user_id", paymentData.user_id)
-          .eq("gateway", "mercadopago")
+          .eq("is_active", true)
+          .limit(1)
           .single()
 
         let currentStatus = paymentData.status
 
-        if (gateway?.access_token && paymentData.external_payment_id) {
+        // NexusPag confirma via webhook (nao tem endpoint de consulta), entao
+        // para tokens nxp_ usamos o status ja gravado no banco.
+        const isNexusToken = gateway?.access_token?.startsWith("nxp_")
+
+        if (gateway?.access_token && !isNexusToken && paymentData.external_payment_id) {
           try {
             const mpResponse = await fetch(
               `https://api.mercadopago.com/v1/payments/${paymentData.external_payment_id}`,
@@ -1600,32 +1605,21 @@ async function processUpdate(botId: string, update: Record<string, unknown>) {
             const pack = packsConfig?.list?.find(p => p.id === packId)
             const packName = pack?.name || "Pack"
 
-            // Gerar PIX chamando a API do Mercado Pago diretamente (igual ao fluxo inicial)
-            const pixResponse = await fetch("https://api.mercadopago.com/v1/payments", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${gatewayPack.access_token}`,
-                "X-Idempotency-Key": `pack_${packId}_${telegramUserId}_${Date.now()}`,
-              },
-              body: JSON.stringify({
-                transaction_amount: packPrice,
-                description: `Pack - ${packName}`,
-                payment_method_id: "pix",
-                payer: {
-                  email: `user${telegramUserId}@telegram.bot`,
-                  first_name: (from?.first_name as string) || "Cliente",
-                },
-                notification_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://dragonbot-h5uz.onrender.com"}/api/payments/webhook/mercadopago`,
-              }),
+            // Gerar PIX usando o gateway ativo (Mercado Pago OU NexusPag).
+            // createPixPayment roteia automaticamente pelo tipo do token (nxp_ = NexusPag).
+            const pixResult = await createPixPayment({
+              accessToken: gatewayPack.access_token,
+              amount: packPrice,
+              description: `Pack - ${packName}`,
+              payerEmail: `user${telegramUserId}@telegram.bot`,
             })
 
-            const pixData = await pixResponse.json()
+            // Mantem o mesmo formato usado no restante do bloco (compatibilidade)
+            const pixData = { id: pixResult.paymentId }
 
-            if (pixData.id && pixData.point_of_interaction?.transaction_data) {
-              const txData = pixData.point_of_interaction.transaction_data
-              const qrCodeUrl = txData.ticket_url
-              const copyPaste = txData.qr_code
+            if (pixResult.success && pixResult.copyPaste) {
+              const qrCodeUrl = pixResult.qrCodeUrl
+              const copyPaste = pixResult.copyPaste
 
               // Salvar pagamento primeiro para ter o ID
               console.log("[v0] Saving pack payment - user_id:", botDataPack.user_id, "bot_id:", botUuid, "flow_id:", flowForPack?.id, "amount:", packPrice)
