@@ -566,9 +566,15 @@ export async function POST(request: NextRequest) {
     
     console.log("[v0] MP webhook body:", JSON.stringify(body))
 
+    // A NexusPag usa a MESMA rota, porem envia { event, data } (pix.paid, pix.expired, pix.refunded)
+    const isNexusPag =
+      body.event === "pix.paid" || body.event === "pix.expired" || body.event === "pix.refunded"
+
     // O Mercado Pago envia diferentes tipos de notificacao
-    if (body.type === "payment" || body.action === "payment.updated") {
-      const paymentId = body.data?.id || body.id
+    if (body.type === "payment" || body.action === "payment.updated" || isNexusPag) {
+      const paymentId = isNexusPag
+        ? body.data?.transaction_id || body.data?.id || body.data?.external_id
+        : body.data?.id || body.id
 
       if (!paymentId) {
         return NextResponse.json({ received: true })
@@ -623,22 +629,42 @@ export async function POST(request: NextRequest) {
       }
       
       if (accessToken) {
-        console.log("[v0] Consultando API do MP para pagamento:", paymentId)
-        const mpResponse = await fetch(
-          `https://api.mercadopago.com/v1/payments/${paymentId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+        let newStatus: string | undefined = undefined
+        let mpData: Record<string, unknown> | null = null
+
+        if (isNexusPag) {
+          // NexusPag ja informa o resultado no proprio evento do webhook,
+          // nao ha endpoint de consulta - mapeamos o evento para o status.
+          newStatus =
+            body.event === "pix.paid"
+              ? "approved"
+              : body.event === "pix.expired"
+                ? "cancelled"
+                : body.event === "pix.refunded"
+                  ? "refunded"
+                  : undefined
+          console.log("[v0] NexusPag webhook - evento:", body.event, "-> status:", newStatus)
+        } else {
+          console.log("[v0] Consultando API do MP para pagamento:", paymentId)
+          const mpResponse = await fetch(
+            `https://api.mercadopago.com/v1/payments/${paymentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          )
+
+          console.log("[v0] MP API response status:", mpResponse.status)
+
+          if (mpResponse.ok) {
+            mpData = await mpResponse.json()
+            newStatus = mpData?.status as string
           }
-        )
+        }
 
-        console.log("[v0] MP API response status:", mpResponse.status)
-
-        if (mpResponse.ok) {
-          const mpData = await mpResponse.json()
-          const newStatus = mpData.status
-          console.log("[v0] Status do MP:", newStatus, "status_detail:", mpData.status_detail)
+        if (newStatus) {
+          console.log("[v0] Status atualizado:", newStatus, "status_detail:", mpData?.status_detail)
 
           // Atualiza o status no banco
           const { error: updateError } = await supabase

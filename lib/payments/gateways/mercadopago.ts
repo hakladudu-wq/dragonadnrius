@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
+import { createPixPayment as nexusCreatePixPayment, checkPaymentStatus as nexusCheckPaymentStatus } from "./nexuspag"
 
 export interface CreatePixPaymentInput {
   accessToken: string
@@ -19,6 +20,13 @@ export interface PixPaymentResult {
 }
 
 export async function createPixPayment(input: CreatePixPaymentInput): Promise<PixPaymentResult> {
+  // Se o token for uma chave da NexusPag (nxp_...), usa a mesma rota porem
+  // enviando a requisicao para a API da NexusPag. Assim, ao trocar de gateway,
+  // todo o fluxo existente continua funcionando sem alterar nada no banco.
+  if (input.accessToken?.startsWith("nxp_")) {
+    return nexusCreatePixPayment(input)
+  }
+
   const { accessToken, amount, description, payerEmail = "cliente@email.com", notificationUrl } = input
 
   // URL de notificacao padrao
@@ -98,6 +106,10 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
 }
 
 export async function checkPaymentStatus(accessToken: string, paymentId: string): Promise<string> {
+  if (accessToken?.startsWith("nxp_")) {
+    return nexusCheckPaymentStatus(accessToken, paymentId)
+  }
+
   try {
     const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
       headers: {

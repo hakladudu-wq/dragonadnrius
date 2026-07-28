@@ -57,6 +57,15 @@ export const AVAILABLE_GATEWAYS = [
     helpUrl: "https://www.mercadopago.com.br/developers/pt/docs/your-integrations/credentials",
   },
   {
+    id: "nexuspag",
+    name: "Nexus Pag",
+    description: "Pagamento via PIX",
+    icon: "nexuspag",
+    color: "#00d68f",
+    methods: ["pix"],
+    helpUrl: "https://nexuspag.com/docs",
+  },
+  {
     id: "pushinpay",
     name: "Pushin Pay",
     description: "PIX instantaneo",
