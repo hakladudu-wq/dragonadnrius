@@ -2,7 +2,7 @@ import { NextRequest } from "next/server"
 import { getSupabase, getSupabaseAdmin } from "@/lib/supabase"
 import { createPixPayment } from "@/lib/payments/gateways/mercadopago"
 import { parseUtmFromStart, saveTrackingUser, trackEvent } from "@/lib/tracking"
-import { isSimulating, captureOutgoing } from "@/lib/telegram-simulation"
+import { isSimulating, captureOutgoing, getSimFlowOverride, nextSimMessageId } from "@/lib/telegram-simulation"
 
 // ---------------------------------------------------------------------------
 // Helper: Sanitizar HTML para Telegram
@@ -288,6 +288,20 @@ async function sendPixPaymentMessages(params: {
 async function getActiveFlowForBot(supabase: ReturnType<typeof getSupabase>, botUuid: string) {
   console.log("[v0] getActiveFlowForBot - Buscando flow para bot:", botUuid)
 
+  // SIMULACAO: se um fluxo especifico foi escolhido no testador, forca ele.
+  const simFlowId = getSimFlowOverride()
+  if (simFlowId) {
+    const { data: overrideFlow } = await supabase
+      .from("flows")
+      .select("id, name, config, status")
+      .eq("id", simFlowId)
+      .single()
+    if (overrideFlow) {
+      console.log("[v0] getActiveFlowForBot - SIMULACAO usando flow forcado:", overrideFlow.id)
+      return overrideFlow
+    }
+  }
+
   // Primeiro tenta via flow_bots (correta)
   const { data: flowBot, error: flowBotError } = await supabase
     .from("flow_bots")
@@ -371,6 +385,13 @@ async function sendTelegramMessage(
     return null
   }
 
+  // SIMULACAO: captura em vez de enviar para o Telegram real.
+  if (isSimulating()) {
+    const simId = nextSimMessageId()
+    captureOutgoing("text", { text: sanitizedText, replyMarkup, messageId: simId })
+    return simId
+  }
+
   const body: Record<string, unknown> = { chat_id: chatId, text: sanitizedText, parse_mode: "HTML" }
   if (replyMarkup) body.reply_markup = replyMarkup
   try {
@@ -420,6 +441,12 @@ async function editTelegramMessage(
 
   // Sanitizar HTML
   const sanitizedText = sanitizeTelegramHTML(text)
+
+  // SIMULACAO: captura a edicao em vez de chamar o Telegram real.
+  if (isSimulating()) {
+    captureOutgoing("edit", { text: sanitizedText, replyMarkup, messageId })
+    return { ok: true }
+  }
 
   const body: Record<string, unknown> = {
     chat_id: chatId,
@@ -479,6 +506,13 @@ async function sendTelegramPhoto(
 
   // Sanitizar caption
   const sanitizedCaption = caption ? sanitizeTelegramHTML(caption) : undefined
+
+  // SIMULACAO: captura a foto em vez de enviar para o Telegram real.
+  if (isSimulating()) {
+    const simId = nextSimMessageId()
+    captureOutgoing("photo", { text: sanitizedCaption, mediaUrl: photoUrl, messageId: simId })
+    return { ok: true, messageId: simId }
+  }
 
   const body: Record<string, unknown> = {
     chat_id: chatId,
@@ -543,6 +577,13 @@ async function sendTelegramVideo(
   // Sanitizar caption
   const sanitizedCaption = caption ? sanitizeTelegramHTML(caption) : undefined
 
+  // SIMULACAO: captura o video em vez de enviar para o Telegram real.
+  if (isSimulating()) {
+    const simId = nextSimMessageId()
+    captureOutgoing("video", { text: sanitizedCaption, mediaUrl: videoUrl, messageId: simId })
+    return { ok: true, messageId: simId }
+  }
+
   const body: Record<string, unknown> = {
     chat_id: chatId,
     video: videoUrl,
@@ -600,6 +641,9 @@ async function answerCallback(
   callbackQueryId: string,
   text?: string,
 ) {
+  // SIMULACAO: nao existe callback real do Telegram para responder.
+  if (isSimulating()) return
+
   const url = `https://api.telegram.org/bot${botToken}/answerCallbackQuery`
   const body: Record<string, unknown> = {
     callback_query_id: callbackQueryId,
@@ -623,6 +667,19 @@ async function sendMediaGroup(
 
   // Sanitizar caption
   const sanitizedCaption = caption ? sanitizeTelegramHTML(caption) : undefined
+
+  // SIMULACAO: captura cada midia como um item (album) sem chamar o Telegram.
+  if (isSimulating()) {
+    mediaUrls.forEach((mediaUrl, index) => {
+      const isVideo = mediaUrl.includes("/videos/") || !!mediaUrl.match(/\.(mp4|webm|mov)($|\?)/i)
+      captureOutgoing(isVideo ? "video" : "photo", {
+        text: index === 0 ? sanitizedCaption : undefined,
+        mediaUrl,
+        messageId: nextSimMessageId(),
+      })
+    })
+    return { ok: true }
+  }
 
   // Se for apenas 1 midia, envia individualmente
   if (mediaUrls.length === 1) {
@@ -766,7 +823,7 @@ async function sendOrderBumpOffer(params: {
 // Process message in background (non-blocking)
 // ---------------------------------------------------------------------------
 
-async function processUpdate(botId: string, update: Record<string, unknown>) {
+export async function processUpdate(botId: string, update: Record<string, unknown>) {
   const supabase = getSupabase()
 
   try {
