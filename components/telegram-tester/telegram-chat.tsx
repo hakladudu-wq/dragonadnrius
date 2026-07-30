@@ -34,6 +34,22 @@ function looksLikePix(text: string): string | null {
   return null
 }
 
+// Muitos bots enviam o QR como imagem via api.qrserver.com/...?data=<CODIGO_PIX>.
+// Extraimos o codigo copia-e-cola do parametro "data" para oferecer o botao de copiar.
+function pixFromQrUrl(url: string | undefined): string | null {
+  if (!url) return null
+  try {
+    const u = new URL(url)
+    const data = u.searchParams.get("data")
+    if (data && (data.includes("BR.GOV.BCB.PIX") || data.startsWith("000201"))) {
+      return data
+    }
+  } catch {
+    // ignora URLs invalidas
+  }
+  return null
+}
+
 function CopyPix({ code }: { code: string }) {
   const [copied, setCopied] = useState(false)
   return (

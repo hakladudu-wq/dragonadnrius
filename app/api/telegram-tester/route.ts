@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
   const { data: bots, error: botsError } = await supabase
     .from("bots")
-    .select("id, name, username, token, status")
+    .select("id, name, token, status")
     .order("created_at", { ascending: false })
     .limit(100)
 
@@ -71,7 +71,6 @@ export async function GET(request: NextRequest) {
     return {
       id: b.id,
       name: b.name,
-      username: b.username,
       status: b.status,
       hasToken: !!b.token,
       flows: botFlows,

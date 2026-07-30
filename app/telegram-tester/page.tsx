@@ -8,7 +8,6 @@ import type { CapturedMessage } from "@/lib/telegram-simulation"
 interface BotOption {
   id: string
   name: string
-  username: string | null
   status: string | null
   hasToken: boolean
   flows: { id: string; name: string; status: string | null }[]
@@ -227,7 +226,7 @@ export default function TelegramTesterPage() {
               {bots.map((b) => (
                 <option key={b.id} value={b.id} disabled={!b.hasToken}>
                   {b.name}
-                  {b.username ? ` (@${b.username})` : ""}
+  
                   {b.hasToken ? "" : " - sem token"}
                 </option>
               ))}
