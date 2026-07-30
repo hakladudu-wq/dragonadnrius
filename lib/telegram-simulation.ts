@@ -21,17 +21,34 @@ export interface CapturedMessage {
   text?: string
   mediaUrl?: string
   buttons?: CapturedButton[][]
+  messageId?: number
 }
 
 interface SimulationContext {
   captures: CapturedMessage[]
+  /** Se definido, o motor deve usar este fluxo em vez do fluxo ativo do bot. */
+  flowOverrideId?: string
+  /** Contador de message_id sinteticos (Telegram nao esta envolvido na simulacao). */
+  messageIdCounter: number
 }
 
 const simulationStore = new AsyncLocalStorage<SimulationContext>()
 
+export interface RunSimulationOptions {
+  /** Forca o motor a rodar um fluxo especifico (para testar um fluxo escolhido). */
+  flowOverrideId?: string
+}
+
 /** Executa `fn` dentro de um contexto de simulacao e retorna as mensagens capturadas. */
-export async function runSimulation(fn: () => Promise<void>): Promise<CapturedMessage[]> {
-  const ctx: SimulationContext = { captures: [] }
+export async function runSimulation(
+  fn: () => Promise<void>,
+  opts: RunSimulationOptions = {},
+): Promise<CapturedMessage[]> {
+  const ctx: SimulationContext = {
+    captures: [],
+    flowOverrideId: opts.flowOverrideId,
+    messageIdCounter: 1000,
+  }
   await simulationStore.run(ctx, fn)
   return ctx.captures
 }
@@ -39,6 +56,19 @@ export async function runSimulation(fn: () => Promise<void>): Promise<CapturedMe
 /** Retorna true se estamos dentro de uma simulacao (envios devem ser capturados). */
 export function isSimulating(): boolean {
   return simulationStore.getStore() !== undefined
+}
+
+/** Retorna o id do fluxo que deve ser forcado na simulacao, se houver. */
+export function getSimFlowOverride(): string | undefined {
+  return simulationStore.getStore()?.flowOverrideId
+}
+
+/** Gera um message_id sintetico e crescente durante a simulacao. */
+export function nextSimMessageId(): number {
+  const store = simulationStore.getStore()
+  if (!store) return Math.floor(Math.random() * 1_000_000)
+  store.messageIdCounter += 1
+  return store.messageIdCounter
 }
 
 /** Normaliza um replyMarkup do Telegram para a lista de botoes capturada. */
@@ -61,7 +91,7 @@ function normalizeButtons(replyMarkup?: unknown): CapturedButton[][] | undefined
 /** Registra uma mensagem que o bot "enviaria". Chamado pelas funcoes de envio. */
 export function captureOutgoing(
   kind: CapturedMessage["kind"],
-  opts: { text?: string; mediaUrl?: string; replyMarkup?: unknown },
+  opts: { text?: string; mediaUrl?: string; replyMarkup?: unknown; messageId?: number },
 ) {
   const store = simulationStore.getStore()
   if (!store) return
@@ -70,5 +100,6 @@ export function captureOutgoing(
     text: opts.text,
     mediaUrl: opts.mediaUrl,
     buttons: normalizeButtons(opts.replyMarkup),
+    messageId: opts.messageId,
   })
 }
