@@ -3,6 +3,7 @@ import { getSupabase, getSupabaseAdmin } from "@/lib/supabase"
 import { createPixPayment } from "@/lib/payments/gateways/mercadopago"
 import { parseUtmFromStart, saveTrackingUser, trackEvent } from "@/lib/tracking"
 import { isSimulating, captureOutgoing, getSimFlowOverride, nextSimMessageId } from "@/lib/telegram-simulation"
+import { logError } from "@/lib/error-logger"
 
 // ---------------------------------------------------------------------------
 // Helper: Sanitizar HTML para Telegram
@@ -119,6 +120,12 @@ async function generatePixPayment(params: {
 
   if (!gateway.access_token) {
     console.error("[v0] generatePixPayment - No access_token in gateway")
+    await logError({
+      source: "pix-generation",
+      message: "Gateway sem access_token configurado",
+      context: `gateway=${gateway.gateway} amount=${amount}`,
+      details: { gatewayId: gateway.id, description },
+    })
     return { success: false, qrCode: "", error: "Gateway sem access_token configurado" }
   }
 
@@ -133,6 +140,12 @@ async function generatePixPayment(params: {
     console.log("[v0] generatePixPayment - result:", result.success, "paymentId:", result.paymentId)
 
     if (!result.success || !result.qrCode) {
+      await logError({
+        source: "pix-generation",
+        message: result.error || "Falha ao gerar PIX",
+        context: `gateway=${gateway.gateway} amount=${amount}`,
+        details: { gatewayId: gateway.id, description, gatewayResult: result },
+      })
       return {
         success: false,
         qrCode: "",
@@ -150,6 +163,16 @@ async function generatePixPayment(params: {
     }
   } catch (err) {
     console.error("[v0] generatePixPayment - Exception:", err)
+    await logError({
+      source: "pix-generation",
+      message: err instanceof Error ? err.message : "Erro ao gerar PIX",
+      context: `gateway=${gateway.gateway} amount=${amount}`,
+      details: {
+        gatewayId: gateway.id,
+        description,
+        stack: err instanceof Error ? err.stack : undefined,
+      },
+    })
     return {
       success: false,
       qrCode: "",
@@ -1653,6 +1676,12 @@ export async function processUpdate(botId: string, update: Record<string, unknow
           .single()
 
         if (!gatewayPack?.access_token) {
+          await logError({
+            source: "pix-generation",
+            message: "Gateway de pagamento nao configurado (pack)",
+            context: `bot=${botUuid} user=${botDataPack.user_id} packId=${packId}`,
+            details: { flowId: flowForPack?.id },
+          })
           await sendTelegramMessage(botToken, chatId, "Erro: Gateway de pagamento nao configurado.")
           return
         }
@@ -1706,6 +1735,12 @@ export async function processUpdate(botId: string, update: Record<string, unknow
 
               if (saveError) {
                 console.error("[v0] Error saving pack payment:", saveError)
+                await logError({
+                  source: "pix-generation",
+                  message: `Erro ao salvar pagamento (pack): ${saveError.message}`,
+                  context: `bot=${botUuid} user=${botDataPack.user_id} packId=${packId} amount=${packPrice}`,
+                  details: { flowId: flowForPack?.id, saveError },
+                })
               } else {
                 console.log("[v0] Pack payment saved:", savedPayment?.id)
               }
@@ -1803,10 +1838,22 @@ export async function processUpdate(botId: string, update: Record<string, unknow
               // ========== FIM DOWNSELL PIX GERADO (PACK) ==========
             } else {
               console.error("[v0] Erro PIX Pack:", pixData)
+              await logError({
+                source: "pix-generation",
+                message: pixResult.error || "Falha ao gerar PIX (pack)",
+                context: `bot=${botUuid} user=${botDataPack.user_id} packId=${packId} amount=${packPrice}`,
+                details: { flowId: flowForPack?.id, pixResult },
+              })
               await sendTelegramMessage(botToken, chatId, "Erro ao gerar pagamento. Tente novamente.")
             }
           } catch (err) {
             console.error("[v0] Erro ao gerar PIX do pack:", err)
+            await logError({
+              source: "pix-generation",
+              message: err instanceof Error ? err.message : "Erro ao gerar PIX do pack",
+              context: `bot=${botUuid} user=${botDataPack.user_id} packId=${packId} amount=${packPrice}`,
+              details: { flowId: flowForPack?.id, stack: err instanceof Error ? err.stack : undefined },
+            })
             await sendTelegramMessage(botToken, chatId, "Erro ao processar pagamento.")
           }
         } else {

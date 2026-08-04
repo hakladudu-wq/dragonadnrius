@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Play, RotateCcw, Loader2 } from "lucide-react"
 import { TelegramChat, type ChatItem } from "@/components/telegram-tester/telegram-chat"
+import { ErrorLogPanel } from "@/components/telegram-tester/error-log-panel"
 import type { CapturedMessage } from "@/lib/telegram-simulation"
 
 interface BotOption {
@@ -284,6 +285,9 @@ export default function TelegramTesterPage() {
           </div>
           {runError && <p className="text-xs text-destructive">{runError}</p>}
         </div>
+
+        {/* Log de erros (PIX, gateway, simulacao) */}
+        <ErrorLogPanel />
 
         {/* Chat */}
         <div className="min-h-0 flex-1">

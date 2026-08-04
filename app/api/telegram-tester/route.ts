@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase"
 import { runSimulation } from "@/lib/telegram-simulation"
 import { processUpdate } from "@/app/api/telegram/webhook/[botId]/route"
+import { logError } from "@/lib/error-logger"
 
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
@@ -176,6 +177,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, captures })
   } catch (err) {
     console.error("[telegram-tester] erro ao rodar update:", err)
+    await logError({
+      source: "telegram-tester",
+      message: err instanceof Error ? err.message : String(err),
+      context: `bot=${body.botId} flow=${body.flowId || "padrao"} action=${body.action}`,
+      details: { stack: err instanceof Error ? err.stack : undefined },
+    })
     return NextResponse.json({ error: String(err) }, { status: 500 })
   }
 }
