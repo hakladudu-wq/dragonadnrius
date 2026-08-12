@@ -163,9 +163,9 @@ export default function SuportePage() {
           {/* Report tab */}
           {activeTab === "report" && (
             <div className="bg-[#1c1c1e] rounded-2xl border border-[#2a2a2e] p-6">
-              <div className="flex items-start gap-3 mb-6 p-4 rounded-xl bg-red-50 border border-red-100">
+              <div className="flex items-start gap-3 mb-6 p-4 rounded-xl bg-red-500/15 border border-red-500/30">
                 <ShieldAlert className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                <p className="text-sm text-red-700 leading-relaxed">
+                <p className="text-sm text-red-400 leading-relaxed">
                   Relate qualquer uso indevido da plataforma ou comportamento de outros usuarios. Seu
                   relato sera analisado pela nossa equipe.
                 </p>

@@ -170,7 +170,7 @@ export default function VendasPage() {
     <>
 
       <ScrollArea className="flex-1">
-        <div className="p-4 md:p-8 bg-[#f5f5f7] min-h-[calc(100vh-60px)]">
+        <div className="p-4 md:p-8 bg-background min-h-[calc(100vh-60px)]">
           <div className="max-w-5xl mx-auto">
             
             {/* Header */}
@@ -181,7 +181,7 @@ export default function VendasPage() {
               </div>
               <div className="flex items-center gap-2">
                 {syncResult && (
-                  <span className="text-xs font-medium px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700">
+                  <span className="text-xs font-medium px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400">
                     {syncResult}
                   </span>
                 )}
@@ -346,15 +346,15 @@ export default function VendasPage() {
                       {/* Valor + Status */}
                       <div className="text-right">
                         <p className={`text-base font-bold ${
-                          payment.status === "approved" ? "text-emerald-600" : 
+                          payment.status === "approved" ? "text-emerald-400" : 
                           payment.status === "pending" ? "text-amber-500" : 
                           "text-gray-500"
                         }`}>
                           {formatCurrency(Number(payment.amount))}
                         </p>
                         <span className={`inline-block mt-1 text-xs font-bold px-2 py-0.5 rounded ${
-                          payment.status === "approved" ? "bg-emerald-100 text-emerald-700" :
-                          payment.status === "pending" ? "bg-amber-100 text-amber-700" :
+                          payment.status === "approved" ? "bg-emerald-500/15 text-emerald-400" :
+                          payment.status === "pending" ? "bg-amber-500/15 text-amber-400" :
                           "bg-[#2a2a2e] text-gray-400"
                         }`}>
                           {payment.status === "approved" ? "Aprovada" : payment.status === "pending" ? "Pendente" : "Rejeitada"}

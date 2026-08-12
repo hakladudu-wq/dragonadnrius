@@ -221,7 +221,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f5f5f7]">
+      <div className="flex-1 flex items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-[#bfff00]" />
       </div>
     )
@@ -229,7 +229,7 @@ export default function SettingsPage() {
 
   return (
     <ScrollArea className="flex-1">
-      <div className="min-h-[calc(100vh-60px)] bg-[#f5f5f7]">
+      <div className="min-h-[calc(100vh-60px)] bg-background">
         <div className="max-w-4xl mx-auto p-4 md:p-8">
 
           {/* ══════════════════════════════════════════════════════════════════
@@ -405,8 +405,8 @@ export default function SettingsPage() {
                 {saveMsg && (
                   <div className={`mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium ${
                     saveMsg.type === "success"
-                      ? "bg-green-50 text-green-700 border border-green-200"
-                      : "bg-red-50 text-red-600 border border-red-200"
+                      ? "bg-green-500/15 text-green-400 border border-green-500/30"
+                      : "bg-red-500/15 text-red-400 border border-red-500/30"
                   }`}>
                     {saveMsg.type === "success" && <Check className="h-4 w-4 shrink-0" />}
                     {saveMsg.text}
@@ -491,8 +491,8 @@ export default function SettingsPage() {
                 {passMsg && (
                   <div className={`mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium ${
                     passMsg.type === "success"
-                      ? "bg-green-50 text-green-700 border border-green-200"
-                      : "bg-red-50 text-red-600 border border-red-200"
+                      ? "bg-green-500/15 text-green-400 border border-green-500/30"
+                      : "bg-red-500/15 text-red-400 border border-red-500/30"
                   }`}>
                     {passMsg.type === "success" && <Check className="h-3 w-3 shrink-0" />}
                     {passMsg.text}
@@ -583,7 +583,7 @@ export default function SettingsPage() {
               <div className="border-t border-[#2a2a2e] px-5 py-4">
                 <button
                   onClick={logout}
-                  className="flex items-center gap-2 text-red-500 hover:text-red-600 transition-colors text-sm"
+                  className="flex items-center gap-2 text-red-500 hover:text-red-400 transition-colors text-sm"
                 >
                   <LogOut className="h-4 w-4" />
                   Sair da conta
@@ -636,12 +636,12 @@ export default function SettingsPage() {
                           )}
                         </div>
                         <p className={`text-base font-bold ${
-                          unlocked ? "text-emerald-700" : isNext ? "text-white" : "text-gray-400"
+                          unlocked ? "text-emerald-400" : isNext ? "text-white" : "text-gray-400"
                         }`}>
                           {m.label}
                         </p>
                         <p className={`text-[10px] font-medium mt-0.5 ${
-                          unlocked ? "text-emerald-600" : isNext ? "text-lime-600" : "text-gray-400"
+                          unlocked ? "text-emerald-400" : isNext ? "text-lime-400" : "text-gray-400"
                         }`}>
                           {unlocked ? "Conquistado" : isNext ? "Proxima meta" : "Bloqueado"}
                         </p>
@@ -654,7 +654,7 @@ export default function SettingsPage() {
                 <div className="rounded-xl bg-[#232325] p-4">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-gray-300">Seu progresso</span>
-                    <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/15 px-2.5 py-1 rounded-full">
                       {progressPercent.toFixed(0)}%
                     </span>
                   </div>
@@ -671,7 +671,7 @@ export default function SettingsPage() {
                       Atual: <span className="text-white font-semibold">R$ {faturamentoAtual.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
                     </span>
                     <span className="text-gray-500">
-                      Faltam: <span className="text-emerald-600 font-semibold">R$ {faltaParaMeta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
+                      Faltam: <span className="text-emerald-400 font-semibold">R$ {faltaParaMeta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
                     </span>
                   </div>
                 </div>

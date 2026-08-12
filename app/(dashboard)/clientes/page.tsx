@@ -308,7 +308,7 @@ export default function ClientesPage() {
   return (
     <>
       <ScrollArea className="flex-1">
-        <div className="p-4 md:p-8 bg-[#f5f5f7] min-h-[calc(100vh-60px)]">
+        <div className="p-4 md:p-8 bg-background min-h-[calc(100vh-60px)]">
           <div className="max-w-5xl mx-auto">
             
             {/* Header */}
@@ -499,12 +499,12 @@ export default function ClientesPage() {
                     >
                       {/* Avatar */}
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-                        client.type === "assinante" ? "bg-purple-100" : "bg-blue-100"
+                        client.type === "assinante" ? "bg-purple-500/15" : "bg-blue-500/15"
                       }`}>
                         {client.type === "assinante" ? (
-                          <Crown className="w-4 h-4 text-purple-600" />
+                          <Crown className="w-4 h-4 text-purple-400" />
                         ) : (
-                          <ShoppingBag className="w-4 h-4 text-blue-600" />
+                          <ShoppingBag className="w-4 h-4 text-blue-400" />
                         )}
                       </div>
 
@@ -520,8 +520,8 @@ export default function ClientesPage() {
                       <div>
                         <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
                           client.type === "assinante" 
-                            ? "bg-purple-100 text-purple-700" 
-                            : "bg-blue-100 text-blue-700"
+                            ? "bg-purple-500/15 text-purple-400" 
+                            : "bg-blue-500/15 text-blue-400"
                         }`}>
                           {client.type === "assinante" ? (
                             <>
@@ -554,14 +554,14 @@ export default function ClientesPage() {
                           client.subscriptions.map((sub, idx) => (
                             <div key={idx} className="flex items-center gap-1">
                               <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
-                                sub.type === "plan" ? "bg-purple-100 text-purple-700" :
-                                sub.type === "upsell" ? "bg-green-100 text-green-700" :
-                                "bg-orange-100 text-orange-700"
+                                sub.type === "plan" ? "bg-purple-500/15 text-purple-400" :
+                                sub.type === "upsell" ? "bg-green-500/15 text-green-400" :
+                                "bg-orange-500/15 text-orange-400"
                               }`}>
                                 {sub.type === "plan" ? "P" : sub.type === "upsell" ? "U" : "D"}
                               </span>
                               {sub.is_lifetime ? (
-                                <span className="inline-flex items-center gap-0.5 text-xs font-bold text-emerald-600">
+                                <span className="inline-flex items-center gap-0.5 text-xs font-bold text-emerald-400">
                                   <Infinity className="w-3 h-3" />
                                 </span>
                               ) : sub.is_expired ? (
@@ -570,7 +570,7 @@ export default function ClientesPage() {
                                   0d
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-0.5 text-xs font-bold text-amber-600">
+                                <span className="inline-flex items-center gap-0.5 text-xs font-bold text-amber-400">
                                   <Clock className="w-3 h-3" />
                                   {sub.remaining_days}d
                                 </span>
@@ -580,7 +580,7 @@ export default function ClientesPage() {
                         ) : client.type === "assinante" ? (
                           // Fallback para clientes sem subscriptions array (dados antigos)
                           client.is_lifetime ? (
-                            <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600">
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
                               <Infinity className="w-3 h-3" />
                               Vitalicio
                             </span>
@@ -590,7 +590,7 @@ export default function ClientesPage() {
                               Expirado
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600">
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-400">
                               <Clock className="w-3 h-3" />
                               {client.remaining_days}d
                             </span>
@@ -605,7 +605,7 @@ export default function ClientesPage() {
                         onClick={() => setSelectedClient(client)}
                         className="text-left"
                       >
-                        <p className="text-base font-bold text-emerald-600">
+                        <p className="text-base font-bold text-emerald-400">
                           {formatCurrency(client.total_spent)}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -629,7 +629,7 @@ export default function ClientesPage() {
                               handleBanClient(client, "remove")
                             }}
                             disabled={banningClient === client.id}
-                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-2 text-red-400 hover:text-red-400 hover:bg-red-500/15 rounded-lg transition-colors disabled:opacity-50"
                             title="Remover do grupo"
                           >
                             {banningClient === client.id ? (
@@ -685,12 +685,12 @@ export default function ClientesPage() {
               <div className="flex items-center justify-between px-6 py-4 border-b border-[#2a2a2e]">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    selectedClient.type === "assinante" ? "bg-purple-100" : "bg-blue-100"
+                    selectedClient.type === "assinante" ? "bg-purple-500/15" : "bg-blue-500/15"
                   }`}>
                     {selectedClient.type === "assinante" ? (
-                      <Crown className="w-5 h-5 text-purple-600" />
+                      <Crown className="w-5 h-5 text-purple-400" />
                     ) : (
-                      <ShoppingBag className="w-5 h-5 text-blue-600" />
+                      <ShoppingBag className="w-5 h-5 text-blue-400" />
                     )}
                   </div>
                   <div>
@@ -714,13 +714,13 @@ export default function ClientesPage() {
               <div className="p-6 space-y-6">
                 {/* Status Card */}
                 <div className={`rounded-xl p-4 ${
-                  selectedClient.type === "assinante" ? "bg-purple-50" : "bg-blue-50"
+                  selectedClient.type === "assinante" ? "bg-purple-500/15" : "bg-blue-500/15"
                 }`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Status</p>
                       <span className={`inline-flex items-center gap-1.5 text-sm font-bold ${
-                        selectedClient.type === "assinante" ? "text-purple-700" : "text-blue-700"
+                        selectedClient.type === "assinante" ? "text-purple-400" : "text-blue-400"
                       }`}>
                         {selectedClient.type === "assinante" ? (
                           <>
@@ -740,7 +740,7 @@ export default function ClientesPage() {
                       <div className="text-right">
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Tempo</p>
                         {selectedClient.is_lifetime ? (
-                          <span className="inline-flex items-center gap-1 text-sm font-bold text-emerald-600">
+                          <span className="inline-flex items-center gap-1 text-sm font-bold text-emerald-400">
                             <Infinity className="w-4 h-4" />
                             Vitalicio
                           </span>
@@ -750,7 +750,7 @@ export default function ClientesPage() {
                             Expirado
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-sm font-bold text-amber-600">
+                          <span className="inline-flex items-center gap-1 text-sm font-bold text-amber-400">
                             <Clock className="w-4 h-4" />
                             {selectedClient.remaining_days} dias restantes
                           </span>
@@ -760,7 +760,7 @@ export default function ClientesPage() {
                   </div>
 
                   {selectedClient.type === "assinante" && selectedClient.plan_name && (
-                    <div className="mt-3 pt-3 border-t border-purple-200/50">
+                    <div className="mt-3 pt-3 border-t border-purple-500/30/50">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Plano</p>
                       <p className="text-sm font-bold text-white">
                         {selectedClient.plan_name} - {formatCurrency(selectedClient.plan_price || 0)}
@@ -778,28 +778,28 @@ export default function ClientesPage() {
                 {selectedClient.type === "assinante" && selectedClient.subscriptions && selectedClient.subscriptions.length > 0 && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-amber-600" />
-                      <p className="text-sm font-bold text-amber-800">Assinaturas Ativas</p>
+                      <Calendar className="w-4 h-4 text-amber-400" />
+                      <p className="text-sm font-bold text-amber-400">Assinaturas Ativas</p>
                     </div>
                     {selectedClient.subscriptions.map((sub, idx) => (
                       <div 
                         key={idx} 
                         className={`rounded-xl p-4 border ${
-                          sub.type === "plan" ? "bg-purple-50 border-purple-100" :
-                          sub.type === "upsell" ? "bg-green-50 border-green-100" :
-                          "bg-orange-50 border-orange-100"
+                          sub.type === "plan" ? "bg-purple-500/15 border-purple-500/30" :
+                          sub.type === "upsell" ? "bg-green-500/15 border-green-500/30" :
+                          "bg-orange-500/15 border-orange-500/30"
                         }`}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${
-                            sub.type === "plan" ? "bg-purple-100 text-purple-700" :
-                            sub.type === "upsell" ? "bg-green-100 text-green-700" :
-                            "bg-orange-100 text-orange-700"
+                            sub.type === "plan" ? "bg-purple-500/15 text-purple-400" :
+                            sub.type === "upsell" ? "bg-green-500/15 text-green-400" :
+                            "bg-orange-500/15 text-orange-400"
                           }`}>
                             {sub.type === "plan" ? "Plano" : sub.type === "upsell" ? "Upsell" : "Downsell"}
                           </span>
                           {sub.is_lifetime ? (
-                            <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600">
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400">
                               <Infinity className="w-3 h-3" />
                               Vitalicio
                             </span>
@@ -809,7 +809,7 @@ export default function ClientesPage() {
                               Expirado
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600">
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-400">
                               <Clock className="w-3 h-3" />
                               {sub.remaining_days}d restantes
                             </span>
@@ -829,30 +829,30 @@ export default function ClientesPage() {
                 
                 {/* Fallback para dados antigos sem subscriptions */}
                 {selectedClient.type === "assinante" && (!selectedClient.subscriptions || selectedClient.subscriptions.length === 0) && (
-                  <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
+                  <div className="bg-amber-500/15 rounded-xl p-4 border border-amber-500/30">
                     <div className="flex items-center gap-2 mb-3">
-                      <Calendar className="w-4 h-4 text-amber-600" />
-                      <p className="text-sm font-bold text-amber-800">Detalhes da Assinatura</p>
+                      <Calendar className="w-4 h-4 text-amber-400" />
+                      <p className="text-sm font-bold text-amber-400">Detalhes da Assinatura</p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <p className="text-xs text-amber-600">Inicio</p>
-                        <p className="text-sm font-medium text-amber-900">
+                        <p className="text-xs text-amber-400">Inicio</p>
+                        <p className="text-sm font-medium text-amber-400">
                           {selectedClient.subscription_start ? formatDate(selectedClient.subscription_start) : formatDate(selectedClient.purchase_date)}
                         </p>
                       </div>
                       {!selectedClient.is_lifetime && selectedClient.subscription_end && (
                         <div>
-                          <p className="text-xs text-amber-600">Vencimento</p>
-                          <p className="text-sm font-medium text-amber-900">
+                          <p className="text-xs text-amber-400">Vencimento</p>
+                          <p className="text-sm font-medium text-amber-400">
                             {formatDate(selectedClient.subscription_end)}
                           </p>
                         </div>
                       )}
                       {selectedClient.is_lifetime && (
                         <div>
-                          <p className="text-xs text-amber-600">Vencimento</p>
-                          <p className="text-sm font-medium text-emerald-600 flex items-center gap-1">
+                          <p className="text-xs text-amber-400">Vencimento</p>
+                          <p className="text-sm font-medium text-emerald-400 flex items-center gap-1">
                             <Infinity className="w-3 h-3" /> Vitalicio
                           </p>
                         </div>
@@ -874,7 +874,7 @@ export default function ClientesPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-[#232325] rounded-xl p-4">
                     <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Total Gasto</p>
-                    <p className="text-xl font-bold text-emerald-600">{formatCurrency(selectedClient.total_spent)}</p>
+                    <p className="text-xl font-bold text-emerald-400">{formatCurrency(selectedClient.total_spent)}</p>
                   </div>
                   <div className="bg-[#232325] rounded-xl p-4">
                     <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Primeira Compra</p>
@@ -904,7 +904,7 @@ export default function ClientesPage() {
                             </p>
                           </div>
                         </div>
-                        <p className="text-sm font-bold text-emerald-600">
+                        <p className="text-sm font-bold text-emerald-400">
                           {formatCurrency(purchase.amount)}
                         </p>
                       </div>
@@ -918,7 +918,7 @@ export default function ClientesPage() {
                     <button
                       onClick={() => handleBanClient(selectedClient, "remove")}
                       disabled={banningClient === selectedClient.id}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium text-sm transition-colors disabled:opacity-50"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/15 hover:bg-red-500/15 text-red-400 rounded-xl font-medium text-sm transition-colors disabled:opacity-50"
                     >
                       {banningClient === selectedClient.id ? (
                         <>
@@ -947,8 +947,8 @@ export default function ClientesPage() {
       <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
         <DialogContent className="sm:max-w-md bg-[#1c1c1e] p-0 rounded-2xl">
           <div className="p-6">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
-              <Trash2 className="w-6 h-6 text-red-600" />
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-500/15 mx-auto mb-4">
+              <Trash2 className="w-6 h-6 text-red-400" />
             </div>
             <h3 className="text-lg font-bold text-white text-center mb-2">
               Limpar todos os clientes?

@@ -550,7 +550,7 @@ export default function BioLinkPage() {
                           <div>
                             <div className="flex items-center gap-2 mb-0.5">
                               <h4 className="font-medium text-[#1A1A1A]">{site.nome}</h4>
-                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${site.published ? 'bg-green-100 text-green-700' : 'bg-[#2a2a2e] text-[#666666]'}`}>
+                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${site.published ? 'bg-green-500/15 text-green-400' : 'bg-[#2a2a2e] text-[#666666]'}`}>
                                 {site.published ? 'Publicado' : 'Rascunho'}
                               </span>
                             </div>
@@ -588,7 +588,7 @@ export default function BioLinkPage() {
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => handleDeletePage(site.id)}
-                                className="text-red-600 focus:text-red-600"
+                                className="text-red-400 focus:text-red-400"
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
                                 Excluir

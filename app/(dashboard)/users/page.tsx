@@ -433,15 +433,15 @@ export default function UsersPage() {
             />
             <KPICard
               icon={Crown} label="Assinantes" value={kpis.assinantes.toLocaleString("pt-BR")}
-              iconBg="bg-emerald-50" iconColor="text-emerald-600"
+              iconBg="bg-emerald-500/15" iconColor="text-emerald-400"
             />
             <KPICard
               icon={Clock} label="Expirando em 7d" value={kpis.expirando7d.toString()}
-              iconBg="bg-amber-50" iconColor="text-amber-600"
+              iconBg="bg-amber-500/15" iconColor="text-amber-400"
             />
             <KPICard
               icon={TrendingUp} label="Conversao" value={kpis.taxaConversao.toString()} suffix="%"
-              iconBg="bg-blue-50" iconColor="text-blue-600"
+              iconBg="bg-blue-500/15" iconColor="text-blue-400"
             />
           </div>
 
