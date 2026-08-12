@@ -116,7 +116,7 @@ export default function GatewaysPage() {
             
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-white mb-2">
                 Gateways de Pagamento
               </h1>
               <p className="text-gray-500">
