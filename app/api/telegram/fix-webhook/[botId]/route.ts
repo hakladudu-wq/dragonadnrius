@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ botId: string }> }
 ) {
   const { botId } = await params
-  const BASE_URL = process.env.BASE_URL || "https://dragonbot-h5uz.onrender.com"
+  const BASE_URL = process.env.BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://dragonxbot.com.br"
   
   const supabase = getSupabase()
   

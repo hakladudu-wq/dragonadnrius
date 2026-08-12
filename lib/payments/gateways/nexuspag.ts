@@ -39,7 +39,7 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
   // Mesma URL de webhook usada pelo Mercado Pago - reaproveita a mesma rota.
   const webhookUrl =
     notificationUrl ||
-    `${process.env.NEXT_PUBLIC_APP_URL || "https://dragonbot-h5uz.onrender.com"}/api/payments/webhook/mercadopago`
+    `${process.env.NEXT_PUBLIC_APP_URL || "https://dragonxbot.com.br"}/api/payments/webhook/mercadopago`
 
   // NexusPag espera o valor em centavos. Aqui o valor chega em reais (igual ao MP).
   const amountInCents = Math.round(Number(amount) * 100)

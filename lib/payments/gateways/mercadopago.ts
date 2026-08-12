@@ -31,7 +31,7 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
   const { accessToken, amount, description, payerEmail = "cliente@email.com", notificationUrl } = input
 
   // URL de notificacao padrao
-  const webhookUrl = notificationUrl || `${process.env.NEXT_PUBLIC_APP_URL || "https://dragonbot-h5uz.onrender.com"}/api/payments/webhook/mercadopago`
+  const webhookUrl = notificationUrl || `${process.env.NEXT_PUBLIC_APP_URL || "https://dragonxbot.com.br"}/api/payments/webhook/mercadopago`
 
   try {
     const response = await fetch("https://api.mercadopago.com/v1/payments", {
