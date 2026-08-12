@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Play, RotateCcw, Loader2 } from "lucide-react"
+import { Play, RotateCcw, Loader2, ArrowLeft } from "lucide-react"
 import { TelegramChat, type ChatItem } from "@/components/telegram-tester/telegram-chat"
 import { ErrorPanel } from "@/components/telegram-tester/error-panel"
 import type { CapturedMessage } from "@/lib/telegram-simulation"
@@ -180,6 +180,16 @@ export default function TelegramTesterPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto flex min-h-screen max-w-md flex-col gap-4 p-4">
+        <div className="flex justify-start">
+          <a
+            href="/"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao dashboard
+          </a>
+        </div>
+
         <header className="text-center">
           <h1 className="text-xl font-bold text-balance">Testador de Fluxos</h1>
           <p className="text-sm text-muted-foreground text-pretty">
