@@ -830,7 +830,7 @@ CREATE TABLE IF NOT EXISTS checkout_leads (
 
 CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_user_id ON dragon_bio_sites(user_id);
 CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_slug ON dragon_bio_sites(slug);
-CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_pixel ON dragon_bio_sites((pixel_config IS NOT NULL));
+CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_pixel ON dragon_bio_sites(id) WHERE pixel_config IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_dragon_bio_links_site_id ON dragon_bio_links(site_id);
 CREATE INDEX IF NOT EXISTS idx_checkout_leads_site_id ON checkout_leads(site_id);
 CREATE INDEX IF NOT EXISTS idx_checkout_leads_created_at ON checkout_leads(created_at DESC);
