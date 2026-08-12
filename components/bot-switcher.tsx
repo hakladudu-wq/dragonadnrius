@@ -42,7 +42,7 @@ export function BotSwitcher({ collapsed }: { collapsed: boolean }) {
         <button
           onClick={() => setWizardOpen(true)}
           className={cn(
-            "flex items-center gap-2 rounded-lg border border-dashed border-gray-300 px-3 py-2.5 text-sm text-gray-500 transition-colors hover:border-[#a3e635] hover:text-[#4d7c0f]",
+            "flex items-center gap-2 rounded-lg border border-dashed border-[#2a2a2e] px-3 py-2.5 text-sm text-gray-400 transition-colors hover:border-[#a3e635] hover:text-[#a3e635]",
             collapsed ? "justify-center" : "w-full"
           )}
         >
@@ -65,7 +65,7 @@ export function BotSwitcher({ collapsed }: { collapsed: boolean }) {
         <DropdownMenuTrigger asChild>
           <button
             className={cn(
-              "flex items-center gap-2 rounded-lg bg-white border border-gray-200 px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-50 w-full",
+              "flex items-center gap-2 rounded-lg bg-[#1c1c1e] border border-[#2a2a2e] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2e] w-full",
               collapsed && "justify-center px-2"
             )}
           >
@@ -80,7 +80,7 @@ export function BotSwitcher({ collapsed }: { collapsed: boolean }) {
             )}
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-56 bg-white border-gray-200">
+        <DropdownMenuContent align="start" className="w-56 bg-[#1c1c1e] border-[#2a2a2e] text-white">
           {bots.map((bot) => (
             <DropdownMenuItem
               key={bot.id}
@@ -89,8 +89,8 @@ export function BotSwitcher({ collapsed }: { collapsed: boolean }) {
                 setOpen(false)
               }}
               className={cn(
-                "flex items-center gap-2 cursor-pointer",
-                selectedBot?.id === bot.id && "bg-gray-100"
+                "flex items-center gap-2 cursor-pointer text-white focus:bg-[#2a2a2e] focus:text-white",
+                selectedBot?.id === bot.id && "bg-[#2a2a2e]"
               )}
             >
               <Circle
@@ -102,13 +102,13 @@ export function BotSwitcher({ collapsed }: { collapsed: boolean }) {
               <span className="truncate">{bot.name}</span>
             </DropdownMenuItem>
           ))}
-          <DropdownMenuSeparator className="bg-gray-200" />
+          <DropdownMenuSeparator className="bg-[#2a2a2e]" />
           <DropdownMenuItem
             onClick={() => {
               setOpen(false)
               setWizardOpen(true)
             }}
-            className="flex items-center gap-2 cursor-pointer text-[#4d7c0f]"
+            className="flex items-center gap-2 cursor-pointer text-[#a3e635] focus:bg-[#2a2a2e] focus:text-[#a3e635]"
           >
             <Plus className="h-3 w-3" />
             <span>Criar novo bot</span>
