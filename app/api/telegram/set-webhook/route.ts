@@ -10,14 +10,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "botId and token required" }, { status: 400 })
     }
 
-    // Usa BASE_URL obrigatoriamente - URL da Render
-    const baseUrl = process.env.BASE_URL
-    
-    if (!baseUrl) {
-      return NextResponse.json({ 
-        error: "BASE_URL nao configurada. Configure: https://dragonbot-h5uz.onrender.com" 
-      }, { status: 500 })
-    }
+    // Usa BASE_URL/NEXT_PUBLIC_APP_URL, com fallback para o dominio proprio
+    const baseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://dragonxbot.com.br"
 
     const webhookUrl = `${baseUrl}/api/telegram/webhook/${botId}`
 

@@ -1,8 +1,9 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Play, RotateCcw, Loader2 } from "lucide-react"
+import { Play, RotateCcw, Loader2, ArrowLeft } from "lucide-react"
 import { TelegramChat, type ChatItem } from "@/components/telegram-tester/telegram-chat"
+import { ErrorPanel } from "@/components/telegram-tester/error-panel"
 import type { CapturedMessage } from "@/lib/telegram-simulation"
 
 interface BotOption {
@@ -25,7 +26,6 @@ function newSession(): Session {
 }
 
 export default function TelegramTesterPage() {
-  const [apiKey, setApiKey] = useState("")
   const [bots, setBots] = useState<BotOption[]>([])
   const [loadingBots, setLoadingBots] = useState(true)
   const [authError, setAuthError] = useState<string | null>(null)
@@ -37,20 +37,15 @@ export default function TelegramTesterPage() {
   const [running, setRunning] = useState(false)
   const [started, setStarted] = useState(false)
   const [runError, setRunError] = useState<string | null>(null)
+  // Muda a cada execucao para o painel de erros recarregar do banco
+  const [errorsRefresh, setErrorsRefresh] = useState(0)
   const sessionRef = useRef<Session>(newSession())
 
-  // Le a chave da URL (?key=...) na primeira renderizacao
-  useEffect(() => {
-    const url = new URL(window.location.href)
-    const k = url.searchParams.get("key") || ""
-    setApiKey(k)
-  }, [])
-
-  const loadBots = useCallback(async (key: string) => {
+  const loadBots = useCallback(async () => {
     setLoadingBots(true)
     setAuthError(null)
     try {
-      const res = await fetch(`/api/telegram-tester?key=${encodeURIComponent(key)}`)
+      const res = await fetch(`/api/telegram-tester`)
       const data = await res.json()
       if (!res.ok) {
         setAuthError(data.error || "Erro ao carregar bots")
@@ -66,8 +61,8 @@ export default function TelegramTesterPage() {
   }, [])
 
   useEffect(() => {
-    loadBots(apiKey)
-  }, [apiKey, loadBots])
+    loadBots()
+  }, [loadBots])
 
   const selectedBot = useMemo(() => bots.find((b) => b.id === selectedBotId), [bots, selectedBotId])
 
@@ -125,7 +120,6 @@ export default function TelegramTesterPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            key: apiKey,
             botId: selectedBotId,
             flowId: selectedFlowId || undefined,
             action: payload.action,
@@ -140,7 +134,7 @@ export default function TelegramTesterPage() {
         })
         const data = await res.json()
         if (!res.ok) {
-          setRunError(data.error || "Erro ao rodar o fluxo")
+          setRunError(data.detail ? `${data.error}\n\n${data.detail}` : data.error || "Erro ao rodar o fluxo")
           return
         }
         applyCaptures(data.captures || [])
@@ -148,9 +142,12 @@ export default function TelegramTesterPage() {
         setRunError(String(err))
       } finally {
         setRunning(false)
+        // Recarrega o painel de erros: qualquer falha (PIX, fluxo, etc.)
+        // gravada no banco durante a execucao aparece aqui.
+        setErrorsRefresh((n) => n + 1)
       }
     },
-    [apiKey, selectedBotId, selectedFlowId, applyCaptures],
+    [selectedBotId, selectedFlowId, applyCaptures],
   )
 
   const handleStart = () => {
@@ -183,6 +180,16 @@ export default function TelegramTesterPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto flex min-h-screen max-w-md flex-col gap-4 p-4">
+        <div className="flex justify-start">
+          <a
+            href="/"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao dashboard
+          </a>
+        </div>
+
         <header className="text-center">
           <h1 className="text-xl font-bold text-balance">Testador de Fluxos</h1>
           <p className="text-sm text-muted-foreground text-pretty">
@@ -191,21 +198,9 @@ export default function TelegramTesterPage() {
           </p>
         </header>
 
-        {/* Chave (quando exigida) */}
         {authError && (
-          <div className="rounded-lg border border-border bg-card p-4">
-            <label className="mb-1 block text-xs font-medium text-muted-foreground" htmlFor="key">
-              Chave de acesso
-            </label>
-            <input
-              id="key"
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Cole sua chave secreta"
-              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            <p className="mt-2 text-xs text-destructive">{authError}</p>
+          <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+            <p className="text-xs text-destructive">{authError}</p>
           </div>
         )}
 
@@ -282,8 +277,15 @@ export default function TelegramTesterPage() {
               </button>
             )}
           </div>
-          {runError && <p className="text-xs text-destructive">{runError}</p>}
+          {runError && (
+            <pre className="max-h-40 overflow-auto whitespace-pre-wrap rounded-md bg-destructive/10 p-2 text-xs text-destructive">
+              {runError}
+            </pre>
+          )}
         </div>
+
+        {/* Painel de erros gravados no banco (PIX, fluxo, webhook, pagamento) */}
+        <ErrorPanel refreshKey={errorsRefresh} botId={selectedBotId || undefined} />
 
         {/* Chat */}
         <div className="min-h-0 flex-1">

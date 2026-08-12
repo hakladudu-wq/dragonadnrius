@@ -10,8 +10,8 @@ export async function registrarWebhook(token: string, botId: string): Promise<{
   error?: string
 }> {
   try {
-    // URL hardcoded da Render - nao depende de variavel de ambiente
-    const baseUrl = "https://dragonbot-h5uz.onrender.com"
+    // URL base do dominio proprio - nao depende de variavel de ambiente
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://dragonxbot.com.br"
     
     console.log("[v0] Registrando webhook com URL:", baseUrl)
 

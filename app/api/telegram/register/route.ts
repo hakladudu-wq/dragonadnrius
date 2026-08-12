@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 // POST /api/telegram/register
 // Body: { botToken: string, botId: string, action: "register" | "unregister" }
 
-const BASE_URL = "https://dragonbot-h5uz.onrender.com"
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://dragonxbot.com.br"
 
 export async function POST(req: NextRequest) {
   try {
