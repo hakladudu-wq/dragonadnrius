@@ -1,11 +1,11 @@
 import { createClient } from "@supabase/supabase-js"
 
-const SUPABASE_URL = "https://izvulojnfvgsbmhyvqtn.supabase.co"
+const SUPABASE_URL = "https://sfysxgcxitsewjwjtorz.supabase.co"
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6dnVsb2puZnZnc2JtaHl2cXRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTk0NTMsImV4cCI6MjA4ODgzNTQ1M30.Djnn3tsrxSGLBR-Bm1dWOpQe0NHCSOWJFZkbbTOk2oM"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXN4Z2N4aXRzZXdqd2p0b3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY1MDkwNzksImV4cCI6MjEwMjA4NTA3OX0.k9AunToqaMM0EPNFyaEvKea5XbUF9s21Z9QpKasAUAo"
 
 // Service Role Key - bypassa RLS para operacoes admin
-const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6dnVsb2puZnZnc2JtaHl2cXRuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzI1OTQ1MywiZXhwIjoyMDg4ODM1NDUzfQ.piDbcvfzUQd8orOFUn7vE1cZ5RXMBFXTd8vKqJRA-Hg"
+const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXN4Z2N4aXRzZXdqd2p0b3J6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjUwOTA3OSwiZXhwIjoyMTAyMDg1MDc5fQ.Jg0SOEj3VQ-xd7BIBoFcarS9QF-fI1rcFNAhJlW_3Wo"
 
 let _supabase: ReturnType<typeof createClient> | null = null
 let _supabaseAdmin: ReturnType<typeof createClient> | null = null
