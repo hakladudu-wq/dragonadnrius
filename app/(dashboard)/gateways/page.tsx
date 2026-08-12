@@ -220,8 +220,8 @@ export default function GatewaysPage() {
 
             {/* Gateways Disponiveis */}
             <div className="mb-5">
-              <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                <Globe className="w-4 h-4 text-gray-500" />
+              <h2 className="text-base font-semibold text-white flex items-center gap-2">
+                <Globe className="w-4 h-4 text-gray-400" />
                 Gateways Disponiveis
               </h2>
             </div>
