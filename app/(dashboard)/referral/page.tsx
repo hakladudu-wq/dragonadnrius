@@ -335,7 +335,7 @@ export default function ReferralPage() {
               </div>
 
               {/* Referral Link Section */}
-              <div className="space-y-4 lg:bg-white lg:rounded-[24px] lg:p-6 lg:shadow-sm lg:border lg:border-[#EEEEEE]">
+              <div className="space-y-4 lg:bg-[#1c1c1e] lg:rounded-[24px] lg:p-6 lg:shadow-sm lg:border lg:border-[#EEEEEE]">
                 <label className="text-xs font-semibold text-[#666666] uppercase tracking-wider">Seu link de indicacao</label>
               
               {coupon ? (
@@ -350,7 +350,7 @@ export default function ReferralPage() {
                             setEditInput(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
                             setEditError("")
                           }}
-                          className="flex-1 bg-white border-[#EEEEEE] rounded-2xl text-[#1A1A1A] placeholder:text-[#666666] focus:border-[#ccff00] h-14 shadow-sm"
+                          className="flex-1 bg-[#1c1c1e] border-[#EEEEEE] rounded-2xl text-[#1A1A1A] placeholder:text-[#666666] focus:border-[#ccff00] h-14 shadow-sm"
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
                               e.preventDefault()
@@ -367,7 +367,7 @@ export default function ReferralPage() {
                         <button
                           onClick={handleUpdateCoupon}
                           disabled={isUpdating || editInput.trim().length < 3}
-                          className="bg-white border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center disabled:opacity-50 hover:bg-gray-50 transition-colors shadow-sm"
+                          className="bg-[#1c1c1e] border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center disabled:opacity-50 hover:bg-[#232325] transition-colors shadow-sm"
                         >
                           {isUpdating ? <Loader2 className="h-5 w-5 animate-spin text-[#1A1A1A]" /> : (
                             <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#ccff00]" fill="none" stroke="currentColor" strokeWidth="2">
@@ -378,7 +378,7 @@ export default function ReferralPage() {
                         <button
                           onClick={handleCancelEdit}
                           disabled={isUpdating}
-                          className="bg-white border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+                          className="bg-[#1c1c1e] border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center hover:bg-[#232325] transition-colors shadow-sm"
                         >
                           <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#666666]" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -391,12 +391,12 @@ export default function ReferralPage() {
                   ) : (
                     <>
                       <div className="flex gap-2">
-                        <div className="flex-1 min-w-0 bg-white border border-[#EEEEEE] rounded-2xl px-4 flex items-center h-14 shadow-sm">
+                        <div className="flex-1 min-w-0 bg-[#1c1c1e] border border-[#EEEEEE] rounded-2xl px-4 flex items-center h-14 shadow-sm">
                           <span className="text-[#666666] text-sm truncate">{referralLink}</span>
                         </div>
                         <button
                           onClick={handleCopy}
-                          className="flex-shrink-0 bg-white border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+                          className="flex-shrink-0 bg-[#1c1c1e] border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center hover:bg-[#232325] transition-colors shadow-sm"
                         >
                           {copied ? (
                             <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#ccff00]" fill="none" stroke="currentColor" strokeWidth="2">
@@ -411,7 +411,7 @@ export default function ReferralPage() {
                         </button>
                         <button
                           onClick={handleStartEdit}
-                          className="flex-shrink-0 bg-white border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+                          className="flex-shrink-0 bg-[#1c1c1e] border border-[#EEEEEE] p-4 rounded-2xl flex items-center justify-center hover:bg-[#232325] transition-colors shadow-sm"
                         >
                           <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#1A1A1A]" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -444,7 +444,7 @@ export default function ReferralPage() {
                       setCouponInput(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
                       setCreateError("")
                     }}
-                    className="w-full bg-white border-[#EEEEEE] rounded-2xl text-[#1A1A1A] placeholder:text-[#666666] focus:border-[#ccff00] h-14 shadow-sm"
+                    className="w-full bg-[#1c1c1e] border-[#EEEEEE] rounded-2xl text-[#1A1A1A] placeholder:text-[#666666] focus:border-[#ccff00] h-14 shadow-sm"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault()
@@ -539,7 +539,7 @@ export default function ReferralPage() {
                                 <span className="text-gray-500 text-xs">Compartilhe e atraia mais amigos!</span>
                               </div>
                             ) : (
-                              <span className="text-gray-700/30 text-xs">---</span>
+                              <span className="text-gray-300/30 text-xs">---</span>
                             )}
                           </td>
                         </tr>
@@ -612,7 +612,7 @@ export default function ReferralPage() {
 
       {/* User Details Dialog */}
       <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
-        <DialogContent className="bg-white border-[#EEEEEE] text-[#1A1A1A] rounded-3xl max-w-md">
+        <DialogContent className="bg-[#1c1c1e] border-[#EEEEEE] text-[#1A1A1A] rounded-3xl max-w-md">
           <DialogHeader>
             <DialogTitle className="text-[#1A1A1A]">Detalhes do Indicado</DialogTitle>
           </DialogHeader>
@@ -920,7 +920,7 @@ export default function ReferralPage() {
                               minute: "2-digit"
                             })}
                           </p>
-                          <p className="text-[10px] text-gray-600 mt-1.5 font-mono truncate">PIX: {withdraw.pix_key}</p>
+                          <p className="text-[10px] text-gray-400 mt-1.5 font-mono truncate">PIX: {withdraw.pix_key}</p>
                         </div>
                         <span 
                           className={cn(

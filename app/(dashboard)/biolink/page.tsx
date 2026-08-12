@@ -453,7 +453,7 @@ export default function BioLinkPage() {
                             key={type.id}
                             onClick={() => handleSelectType(type.id)}
                             disabled={creating}
-                            className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-[#EEEEEE] bg-white hover:border-[#ccff00] hover:shadow-md transition-all text-center disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="group flex flex-col items-center gap-3 p-5 rounded-2xl border border-[#EEEEEE] bg-[#1c1c1e] hover:border-[#ccff00] hover:shadow-md transition-all text-center disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-lg group-hover:scale-105 transition-transform">
                               <img 
@@ -491,7 +491,7 @@ export default function BioLinkPage() {
             
             {!hasPages ? (
               /* Estado Vazio - Escolha de tipo */
-              <div className="space-y-4 lg:bg-white lg:rounded-[24px] lg:p-6 lg:shadow-sm lg:border lg:border-[#EEEEEE]">
+              <div className="space-y-4 lg:bg-[#1c1c1e] lg:rounded-[24px] lg:p-6 lg:shadow-sm lg:border lg:border-[#EEEEEE]">
                 <label className="text-xs font-semibold text-[#666666] uppercase tracking-wider">Escolha um tipo de pagina</label>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -500,7 +500,7 @@ export default function BioLinkPage() {
                       key={type.id}
                       onClick={() => handleSelectType(type.id)}
                       disabled={creating}
-                      className="group bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                      className="group bg-[#1c1c1e] rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
                       <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                         <img 
@@ -531,7 +531,7 @@ export default function BioLinkPage() {
               </div>
             ) : (
               /* Estado Com Paginas - Lista */
-              <section className="space-y-4 lg:bg-white lg:rounded-[24px] lg:p-6 lg:shadow-sm lg:border lg:border-[#EEEEEE]">
+              <section className="space-y-4 lg:bg-[#1c1c1e] lg:rounded-[24px] lg:p-6 lg:shadow-sm lg:border lg:border-[#EEEEEE]">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-semibold text-[#666666] uppercase tracking-wider">Suas Paginas</label>
                   <span className="text-xs text-[#666666]">{totalPages} {totalPages === 1 ? 'pagina' : 'paginas'}</span>
@@ -542,7 +542,7 @@ export default function BioLinkPage() {
                     const pageType = getPageTypeFromSite(site)
                     const typeConfig = getPageTypeConfig(pageType)
                     return (
-                      <div key={site.id} className="bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-md transition-all flex items-center justify-between shadow-sm">
+                      <div key={site.id} className="bg-[#1c1c1e] rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-md transition-all flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-4">
                           <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${typeConfig.gradient} flex items-center justify-center shadow-sm`}>
                             {typeConfig.icon}
@@ -550,7 +550,7 @@ export default function BioLinkPage() {
                           <div>
                             <div className="flex items-center gap-2 mb-0.5">
                               <h4 className="font-medium text-[#1A1A1A]">{site.nome}</h4>
-                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${site.published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-[#666666]'}`}>
+                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${site.published ? 'bg-green-100 text-green-700' : 'bg-[#2a2a2e] text-[#666666]'}`}>
                                 {site.published ? 'Publicado' : 'Rascunho'}
                               </span>
                             </div>
@@ -572,7 +572,7 @@ export default function BioLinkPage() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-9 w-9 rounded-lg bg-[#f3f4f6] text-[#666666] hover:bg-gray-200 hover:text-[#1A1A1A]"
+                                className="h-9 w-9 rounded-lg bg-[#f3f4f6] text-[#666666] hover:bg-[#3a3a3e] hover:text-[#1A1A1A]"
                               >
                                 <MoreHorizontal className="w-4 h-4" />
                               </Button>
@@ -623,7 +623,7 @@ export default function BioLinkPage() {
             <button 
               onClick={() => handleSelectPresellType("age-verification")}
               disabled={creating}
-              className="group bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group bg-[#1c1c1e] rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
@@ -645,7 +645,7 @@ export default function BioLinkPage() {
             <button 
               onClick={() => handleSelectPresellType("thank-you")}
               disabled={creating}
-              className="group bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group bg-[#1c1c1e] rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -690,7 +690,7 @@ export default function BioLinkPage() {
             <button 
               onClick={() => handleSelectCheckoutType("direto")}
               disabled={creating}
-              className="group bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group bg-[#1c1c1e] rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">
@@ -713,7 +713,7 @@ export default function BioLinkPage() {
             <button 
               onClick={() => handleSelectCheckoutType("normal")}
               disabled={creating}
-              className="group bg-white rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group bg-[#1c1c1e] rounded-2xl p-4 border border-[#EEEEEE] hover:border-[#ccff00] hover:shadow-lg transition-all duration-300 text-left flex items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2">

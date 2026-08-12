@@ -314,7 +314,7 @@ export default function ClientesPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-1">Clientes</h1>
+                <h1 className="text-2xl font-bold text-white mb-1">Clientes</h1>
                 <p className="text-gray-500">Gerencie seus assinantes e compradores</p>
               </div>
               <div className="flex items-center gap-2">
@@ -406,19 +406,19 @@ export default function ClientesPage() {
                     placeholder="Buscar por nome, @username..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-9 pl-9 pr-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all"
+                    className="w-full h-9 pl-9 pr-4 bg-[#1c1c1e] border border-[#2a2a2e] rounded-lg text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3a3a3e] focus:border-[#3a3a3e] transition-all"
                   />
                 </div>
 
-                <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+                <div className="flex items-center gap-1 bg-[#2a2a2e] p-1 rounded-lg">
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => { setActiveTab(tab.id); setCurrentPage(1); }}
                       className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                         activeTab === tab.id
-                          ? "bg-white text-gray-900 shadow-sm"
-                          : "text-gray-500 hover:text-gray-700"
+                          ? "bg-[#1c1c1e] text-white shadow-sm"
+                          : "text-gray-500 hover:text-gray-300"
                       }`}
                     >
                       {tab.label} ({tab.count})
@@ -438,7 +438,7 @@ export default function ClientesPage() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     selectedFlowId === ""
                       ? "bg-[#1c1c1e] text-white"
-                      : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                      : "bg-[#1c1c1e] border border-[#2a2a2e] text-gray-400 hover:bg-[#232325]"
                   }`}
                 >
                   Todos
@@ -451,7 +451,7 @@ export default function ClientesPage() {
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                         selectedFlowId === flow.id
                           ? "bg-[#1c1c1e] text-white"
-                          : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                          : "bg-[#1c1c1e] border border-[#2a2a2e] text-gray-400 hover:bg-[#232325]"
                       }`}
                     >
                       <GitBranch className="w-3 h-3" />
@@ -465,9 +465,9 @@ export default function ClientesPage() {
             </div>
 
             {/* Table Layout */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-[48px_180px_140px_100px_100px_100px_80px] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="grid grid-cols-[48px_180px_140px_100px_100px_100px_80px] gap-4 px-5 py-3 bg-[#232325] border-b border-[#2a2a2e]">
                 <div />
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Cliente</span>
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Tipo</span>
@@ -484,18 +484,18 @@ export default function ClientesPage() {
                 </div>
               ) : filteredClients.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full bg-[#2a2a2e] flex items-center justify-center mb-3">
                     <Users className="h-5 w-5 text-gray-400" />
                   </div>
-                  <p className="text-sm font-bold text-gray-900">Nenhum cliente encontrado</p>
+                  <p className="text-sm font-bold text-white">Nenhum cliente encontrado</p>
                   <p className="text-xs text-gray-500 mt-1">Os clientes aparecerao aqui apos as vendas</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-[#2a2a2e]">
                   {filteredClients.map((client) => (
                     <div
                       key={client.id}
-                      className="w-full grid grid-cols-[48px_180px_140px_100px_100px_100px_80px] gap-4 items-center px-5 py-4 hover:bg-gray-50 transition-colors text-left"
+                      className="w-full grid grid-cols-[48px_180px_140px_100px_100px_100px_80px] gap-4 items-center px-5 py-4 hover:bg-[#232325] transition-colors text-left"
                     >
                       {/* Avatar */}
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
@@ -510,7 +510,7 @@ export default function ClientesPage() {
 
                       {/* Cliente */}
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-gray-900 truncate">{client.full_name}</p>
+                        <p className="text-sm font-bold text-white truncate">{client.full_name}</p>
                         <p className="text-sm font-medium text-gray-500 truncate">
                           {client.telegram_username ? `@${client.telegram_username}` : `ID: ${client.telegram_user_id}`}
                         </p>
@@ -540,7 +540,7 @@ export default function ClientesPage() {
                       {/* Plano */}
                       <div className="min-w-0">
                         {client.type === "assinante" ? (
-                          <p className="text-sm font-semibold text-gray-800 truncate">
+                          <p className="text-sm font-semibold text-gray-100 truncate">
                             {client.plan_name || "Plano"}
                           </p>
                         ) : (
@@ -617,7 +617,7 @@ export default function ClientesPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => setSelectedClient(client)}
-                          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                          className="p-2 text-gray-400 hover:text-gray-400 hover:bg-[#2a2a2e] rounded-lg transition-colors"
                           title="Ver detalhes"
                         >
                           <Search className="w-4 h-4" />
@@ -652,20 +652,20 @@ export default function ClientesPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-[#1c1c1e] border border-[#2a2a2e] text-gray-300 hover:bg-[#232325] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Anterior
                 </button>
 
-                <span className="px-4 py-2 text-sm text-gray-600">
+                <span className="px-4 py-2 text-sm text-gray-400">
                   Pagina {currentPage} de {Math.ceil(totalCount / ITEMS_PER_PAGE)}
                 </span>
 
                 <button
                   onClick={() => setCurrentPage(p => p + 1)}
                   disabled={currentPage >= Math.ceil(totalCount / ITEMS_PER_PAGE)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-[#1c1c1e] border border-[#2a2a2e] text-gray-300 hover:bg-[#232325] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Proximo
                   <ChevronRight className="h-4 w-4" />
@@ -678,11 +678,11 @@ export default function ClientesPage() {
 
       {/* Client Details Modal */}
       <Dialog open={!!selectedClient} onOpenChange={() => setSelectedClient(null)}>
-        <DialogContent className="max-w-lg p-0 overflow-hidden bg-white">
+        <DialogContent className="max-w-lg p-0 overflow-hidden bg-[#1c1c1e]">
           {selectedClient && (
             <>
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[#2a2a2e]">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
                     selectedClient.type === "assinante" ? "bg-purple-100" : "bg-blue-100"
@@ -694,7 +694,7 @@ export default function ClientesPage() {
                     )}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900">{selectedClient.full_name}</p>
+                    <p className="font-bold text-white">{selectedClient.full_name}</p>
                     <p className="text-sm text-gray-500">
                       {selectedClient.telegram_username 
                         ? `@${selectedClient.telegram_username}` 
@@ -704,7 +704,7 @@ export default function ClientesPage() {
                 </div>
                 <button
                   onClick={() => setSelectedClient(null)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="p-2 rounded-lg hover:bg-[#2a2a2e] transition-colors"
                 >
                   <X className="h-5 w-5 text-gray-400" />
                 </button>
@@ -762,7 +762,7 @@ export default function ClientesPage() {
                   {selectedClient.type === "assinante" && selectedClient.plan_name && (
                     <div className="mt-3 pt-3 border-t border-purple-200/50">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Plano</p>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-sm font-bold text-white">
                         {selectedClient.plan_name} - {formatCurrency(selectedClient.plan_price || 0)}
                       </p>
                       {selectedClient.duration_days && (
@@ -815,7 +815,7 @@ export default function ClientesPage() {
                             </span>
                           )}
                         </div>
-                        <p className="text-sm font-bold text-gray-900">{sub.name}</p>
+                        <p className="text-sm font-bold text-white">{sub.name}</p>
                         <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
                           <span>Inicio: {formatDate(sub.start_date)}</span>
                           {!sub.is_lifetime && sub.end_date && (
@@ -863,40 +863,40 @@ export default function ClientesPage() {
 
                 {/* Flow Info */}
                 {selectedClient.flow_name && (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-[#2a2a2e] rounded-lg">
                     <GitBranch className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm text-gray-600">Fluxo:</span>
-                    <span className="text-sm font-medium text-gray-900">{selectedClient.flow_name}</span>
+                    <span className="text-sm text-gray-400">Fluxo:</span>
+                    <span className="text-sm font-medium text-white">{selectedClient.flow_name}</span>
                   </div>
                 )}
 
                 {/* Info Grid */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-xl p-4">
+                  <div className="bg-[#232325] rounded-xl p-4">
                     <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Total Gasto</p>
                     <p className="text-xl font-bold text-emerald-600">{formatCurrency(selectedClient.total_spent)}</p>
                   </div>
-                  <div className="bg-gray-50 rounded-xl p-4">
+                  <div className="bg-[#232325] rounded-xl p-4">
                     <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Primeira Compra</p>
-                    <p className="text-sm font-bold text-gray-900">{formatDate(selectedClient.purchase_date)}</p>
+                    <p className="text-sm font-bold text-white">{formatDate(selectedClient.purchase_date)}</p>
                   </div>
                 </div>
 
                 {/* Purchases History */}
                 <div>
-                  <p className="text-sm font-bold text-gray-900 mb-3">Historico de Compras</p>
+                  <p className="text-sm font-bold text-white mb-3">Historico de Compras</p>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {selectedClient.purchases.map((purchase) => (
                       <div
                         key={purchase.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        className="flex items-center justify-between p-3 bg-[#232325] rounded-lg"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-lg bg-[#1c1c1e] border border-[#2a2a2e] flex items-center justify-center">
                             <Package className="w-4 h-4 text-gray-500" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-white">
                               {purchase.product_name || getProductTypeName(purchase.product_type)}
                             </p>
                             <p className="text-xs text-gray-500">
@@ -914,7 +914,7 @@ export default function ClientesPage() {
 
                 {/* Botao de Banimento (apenas para assinantes) */}
                 {selectedClient.type === "assinante" && (
-                  <div className="pt-4 border-t border-gray-200">
+                  <div className="pt-4 border-t border-[#2a2a2e]">
                     <button
                       onClick={() => handleBanClient(selectedClient, "remove")}
                       disabled={banningClient === selectedClient.id}
@@ -945,12 +945,12 @@ export default function ClientesPage() {
 
       {/* Dialog de confirmacao para limpar todos os clientes */}
       <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
-        <DialogContent className="sm:max-w-md bg-white p-0 rounded-2xl">
+        <DialogContent className="sm:max-w-md bg-[#1c1c1e] p-0 rounded-2xl">
           <div className="p-6">
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
               <Trash2 className="w-6 h-6 text-red-600" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+            <h3 className="text-lg font-bold text-white text-center mb-2">
               Limpar todos os clientes?
             </h3>
             <p className="text-sm text-gray-500 text-center mb-6">
@@ -961,7 +961,7 @@ export default function ClientesPage() {
               <button
                 onClick={() => setShowClearConfirm(false)}
                 disabled={clearingClients}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-[#2a2a2e] text-gray-300 text-sm font-medium hover:bg-[#3a3a3e] transition-colors disabled:opacity-50"
               >
                 Cancelar
               </button>

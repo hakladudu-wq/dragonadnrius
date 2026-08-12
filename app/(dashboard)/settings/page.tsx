@@ -300,7 +300,7 @@ export default function SettingsPage() {
                   {copiedId ? (
                     <Check className="h-3 w-3 text-[#bfff00]" />
                   ) : (
-                    <Copy className="h-3 w-3 text-gray-600" />
+                    <Copy className="h-3 w-3 text-gray-400" />
                   )}
                 </button>
               </div>
@@ -358,7 +358,7 @@ export default function SettingsPage() {
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                   activeSection === tab.id
                     ? "bg-[#bfff00] text-black shadow-sm"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-white/60"
+                    : "text-gray-400 hover:text-white hover:bg-white/60"
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
@@ -371,15 +371,15 @@ export default function SettingsPage() {
               PERSONAL INFO SECTION
           ══════════════════════════════════════════════════════════════════ */}
           {activeSection === "perfil" && (
-            <section className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden animate-in fade-in-0 slide-in-from-bottom-3 duration-300">
+            <section className="rounded-xl bg-[#1c1c1e] border border-[#2a2a2e] shadow-sm overflow-hidden animate-in fade-in-0 slide-in-from-bottom-3 duration-300">
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                <h2 className="text-sm font-semibold text-gray-900">Informacoes Pessoais</h2>
+              <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a2e]">
+                <h2 className="text-sm font-semibold text-white">Informacoes Pessoais</h2>
                 <button
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
                     editMode
                       ? "bg-[#bfff00] text-black hover:bg-[#d4ff4d]"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-[#2a2a2e] text-gray-400 hover:bg-[#3a3a3e]"
                   }`}
                   onClick={() => {
                     if (editMode) {
@@ -414,7 +414,7 @@ export default function SettingsPage() {
                 )}
 
                 {/* Info list - clean and simple */}
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-[#2a2a2e]">
                   {/* Nome */}
                   <div className="py-4 first:pt-0">
                     <div className="flex items-center justify-between">
@@ -424,10 +424,10 @@ export default function SettingsPage() {
                           <Input
                             value={nome}
                             onChange={(e) => setNome(e.target.value)}
-                            className="bg-gray-50 border-gray-200 rounded-lg h-10 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#bfff00] focus:ring-[#bfff00]/20 max-w-sm"
+                            className="bg-[#232325] border-[#2a2a2e] rounded-lg h-10 text-sm text-white placeholder:text-gray-400 focus:border-[#bfff00] focus:ring-[#bfff00]/20 max-w-sm"
                           />
                         ) : (
-                          <p className="text-sm font-medium text-gray-900">{profile?.name || "Nao informado"}</p>
+                          <p className="text-sm font-medium text-white">{profile?.name || "Nao informado"}</p>
                         )}
                       </div>
                     </div>
@@ -438,7 +438,7 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-1">Email</p>
-                        <p className="text-sm font-medium text-gray-900">{profile?.email || session?.email || "Nao informado"}</p>
+                        <p className="text-sm font-medium text-white">{profile?.email || session?.email || "Nao informado"}</p>
                       </div>
                       <Lock className="h-4 w-4 text-gray-400" />
                     </div>
@@ -449,7 +449,7 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-1">Telefone</p>
-                        <p className="text-sm font-medium text-gray-900">{profile?.phone || "Nao informado"}</p>
+                        <p className="text-sm font-medium text-white">{profile?.phone || "Nao informado"}</p>
                       </div>
                       <Lock className="h-4 w-4 text-gray-400" />
                     </div>
@@ -460,7 +460,7 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-1">Conta criada em</p>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-white">
                           {profile?.created_at
                             ? new Date(profile.created_at).toLocaleDateString("pt-BR", {
                                 day: "2-digit",
@@ -481,10 +481,10 @@ export default function SettingsPage() {
               SECURITY SECTION
           ══════════════════════════════════════════════════════════════════ */}
           {activeSection === "seguranca" && (
-            <section className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden animate-in fade-in-0 slide-in-from-bottom-3 duration-300">
+            <section className="rounded-xl bg-[#1c1c1e] border border-[#2a2a2e] shadow-sm overflow-hidden animate-in fade-in-0 slide-in-from-bottom-3 duration-300">
               {/* Header */}
-              <div className="px-5 py-4 border-b border-gray-100">
-                <h2 className="text-sm font-semibold text-gray-900">Alterar Senha</h2>
+              <div className="px-5 py-4 border-b border-[#2a2a2e]">
+                <h2 className="text-sm font-semibold text-white">Alterar Senha</h2>
               </div>
 
               <div className="p-5">
@@ -509,12 +509,12 @@ export default function SettingsPage() {
                         placeholder="Digite sua senha atual"
                         value={oldPass}
                         onChange={(e) => setOldPass(e.target.value)}
-                        className="bg-gray-50 border-gray-200 rounded-lg h-10 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#bfff00] focus:ring-[#bfff00]/20"
+                        className="bg-[#232325] border-[#2a2a2e] rounded-lg h-10 pr-10 text-sm text-white placeholder:text-gray-400 focus:border-[#bfff00] focus:ring-[#bfff00]/20"
                       />
                       <button
                         type="button"
                         onClick={() => setShowOldPass(!showOldPass)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
                       >
                         {showOldPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -530,12 +530,12 @@ export default function SettingsPage() {
                         placeholder="Minimo 6 caracteres"
                         value={newPass}
                         onChange={(e) => setNewPass(e.target.value)}
-                        className="bg-gray-50 border-gray-200 rounded-lg h-10 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#bfff00] focus:ring-[#bfff00]/20"
+                        className="bg-[#232325] border-[#2a2a2e] rounded-lg h-10 pr-10 text-sm text-white placeholder:text-gray-400 focus:border-[#bfff00] focus:ring-[#bfff00]/20"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPass(!showNewPass)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
                       >
                         {showNewPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
@@ -554,7 +554,7 @@ export default function SettingsPage() {
                                     : newPass.length >= 6
                                       ? "bg-amber-400"
                                       : "bg-red-400"
-                                  : "bg-gray-200"
+                                  : "bg-[#3a3a3e]"
                               }`}
                             />
                           ))}
@@ -580,7 +580,7 @@ export default function SettingsPage() {
               </div>
 
               {/* Logout */}
-              <div className="border-t border-gray-100 px-5 py-4">
+              <div className="border-t border-[#2a2a2e] px-5 py-4">
                 <button
                   onClick={logout}
                   className="flex items-center gap-2 text-red-500 hover:text-red-600 transition-colors text-sm"
@@ -596,10 +596,10 @@ export default function SettingsPage() {
               REWARDS / PREMIACOES SECTION - Light Theme
           ══════════════════════════════════════════════════════════════════ */}
           {activeSection === "premiacoes" && (
-            <section className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden animate-in fade-in-0 slide-in-from-bottom-3 duration-300">
+            <section className="rounded-xl bg-[#1c1c1e] border border-[#2a2a2e] shadow-sm overflow-hidden animate-in fade-in-0 slide-in-from-bottom-3 duration-300">
               {/* Header */}
-              <div className="px-5 py-4 border-b border-gray-100">
-                <h2 className="text-sm font-semibold text-gray-900">Metas de Faturamento</h2>
+              <div className="px-5 py-4 border-b border-[#2a2a2e]">
+                <h2 className="text-sm font-semibold text-white">Metas de Faturamento</h2>
                 <p className="text-xs text-gray-500 mt-0.5">Desbloqueie recompensas ao atingir cada meta</p>
               </div>
 
@@ -619,7 +619,7 @@ export default function SettingsPage() {
                             ? "bg-gradient-to-b from-emerald-50 to-emerald-100/50 ring-1 ring-emerald-200"
                             : isNext 
                               ? "bg-gradient-to-b from-lime-50 to-lime-100/30 ring-1 ring-lime-300" 
-                              : "bg-gray-50/80 ring-1 ring-gray-100"
+                              : "bg-[#232325]/80 ring-1 ring-[#3a3a3e]"
                         }`}
                       >
                         <div className={`mx-auto flex items-center justify-center h-11 w-11 rounded-xl mb-2.5 ${
@@ -627,7 +627,7 @@ export default function SettingsPage() {
                             ? "bg-emerald-500 shadow-md shadow-emerald-200"
                             : isNext 
                               ? "bg-[#bfff00] shadow-md shadow-lime-200" 
-                              : "bg-gray-200"
+                              : "bg-[#3a3a3e]"
                         }`}>
                           {unlocked ? (
                             <Trophy className="h-5 w-5 text-white" />
@@ -636,7 +636,7 @@ export default function SettingsPage() {
                           )}
                         </div>
                         <p className={`text-base font-bold ${
-                          unlocked ? "text-emerald-700" : isNext ? "text-gray-900" : "text-gray-400"
+                          unlocked ? "text-emerald-700" : isNext ? "text-white" : "text-gray-400"
                         }`}>
                           {m.label}
                         </p>
@@ -651,15 +651,15 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Progress section */}
-                <div className="rounded-xl bg-gray-50 p-4">
+                <div className="rounded-xl bg-[#232325] p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-gray-700">Seu progresso</span>
+                    <span className="text-sm font-medium text-gray-300">Seu progresso</span>
                     <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                       {progressPercent.toFixed(0)}%
                     </span>
                   </div>
                   
-                  <div className="relative h-2.5 bg-gray-200 rounded-full overflow-hidden mb-3">
+                  <div className="relative h-2.5 bg-[#3a3a3e] rounded-full overflow-hidden mb-3">
                     <div 
                       className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#bfff00] to-emerald-500 rounded-full transition-all duration-500"
                       style={{ width: `${Math.max(progressPercent, 2)}%` }}
@@ -668,7 +668,7 @@ export default function SettingsPage() {
                   
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-gray-500">
-                      Atual: <span className="text-gray-900 font-semibold">R$ {faturamentoAtual.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
+                      Atual: <span className="text-white font-semibold">R$ {faturamentoAtual.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
                     </span>
                     <span className="text-gray-500">
                       Faltam: <span className="text-emerald-600 font-semibold">R$ {faltaParaMeta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
