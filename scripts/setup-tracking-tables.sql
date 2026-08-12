@@ -1,4 +1,4 @@
--- ============================================
+lguam rota -- ============================================
 -- DRAGON TRACKING SYSTEM - DATABASE SETUP
 -- ============================================
 -- Execute este script no Supabase SQL Editor para criar as tabelas de tracking
