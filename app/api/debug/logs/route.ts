@@ -1,6 +1,43 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getMemoryLogs, clearMemoryLogs, LogCategory, LogLevel } from "@/lib/logger"
+import { getMemoryLogs, clearMemoryLogs, log, LogCategory, LogLevel } from "@/lib/logger"
 import { getSupabase } from "@/lib/supabase"
+
+/**
+ * POST /api/debug/logs
+ *
+ * Grava um log no banco (via service role, driblando o RLS).
+ * Usado pelo client para registrar erros que acontecem no navegador,
+ * como falhas ao criar bot, para aparecerem no painel "Erros registrados".
+ *
+ * Body: { level, category, message, data?, bot_id?, flow_id?, telegram_user_id? }
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { level, category, message, data, bot_id, flow_id, telegram_user_id } = body
+
+    if (!message) {
+      return NextResponse.json({ success: false, error: "message e obrigatorio" }, { status: 400 })
+    }
+
+    await log({
+      level: (level as LogLevel) || "error",
+      category: (category as LogCategory) || "general",
+      message: String(message),
+      data: data || {},
+      bot_id: bot_id || undefined,
+      flow_id: flow_id || undefined,
+      telegram_user_id: telegram_user_id || undefined,
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: error instanceof Error ? error.message : "Erro ao gravar log" },
+      { status: 500 },
+    )
+  }
+}
 
 /**
  * GET /api/debug/logs

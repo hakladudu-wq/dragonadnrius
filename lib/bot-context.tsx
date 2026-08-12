@@ -132,8 +132,16 @@ export function BotProvider({ children }: { children: ReactNode }) {
           }, { onConflict: "id" })
 
           if (upsertError) {
-            console.error("Error ensuring user profile:", upsertError)
-            throw new Error("Erro ao verificar perfil do usuario")
+            console.error("[v0] Error ensuring user profile:", upsertError)
+            const detalhe = [
+              upsertError.message,
+              upsertError.details ? `Detalhes: ${upsertError.details}` : "",
+              upsertError.hint ? `Dica: ${upsertError.hint}` : "",
+              upsertError.code ? `Codigo: ${upsertError.code}` : "",
+            ]
+              .filter(Boolean)
+              .join(" | ")
+            throw new Error(`Erro ao verificar perfil do usuario: ${detalhe}`)
           }
         } else {
           throw new Error("Sessao expirada. Faca login novamente.")
@@ -155,8 +163,40 @@ export function BotProvider({ children }: { children: ReactNode }) {
         .single()
 
       if (error) {
-        console.error("Error creating bot:", error)
-        throw new Error("Erro ao criar bot")
+        console.error("[v0] Error creating bot:", error)
+        // Monta uma mensagem detalhada com tudo que o Supabase devolveu
+        const detalhe = [
+          error.message,
+          error.details ? `Detalhes: ${error.details}` : "",
+          error.hint ? `Dica: ${error.hint}` : "",
+          error.code ? `Codigo: ${error.code}` : "",
+        ]
+          .filter(Boolean)
+          .join(" | ")
+
+        // Grava o erro no banco via servidor (service role fura o RLS).
+        // Aparece no painel "Erros registrados" do tester.
+        try {
+          await fetch("/api/debug/logs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              level: "error",
+              category: "general",
+              message: `Falha ao criar bot: ${detalhe}`,
+              data: {
+                action: "create_bot",
+                user_id: session.userId,
+                bot_name: data.name,
+                supabase_code: error.code || null,
+              },
+            }),
+          })
+        } catch {
+          // Se ate o log falhar, ignora para nao mascarar o erro original
+        }
+
+        throw new Error(detalhe || "Erro ao criar bot")
       }
 
       const newBot = inserted as Bot
