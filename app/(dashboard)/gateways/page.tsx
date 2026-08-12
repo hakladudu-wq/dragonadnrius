@@ -111,12 +111,12 @@ export default function GatewaysPage() {
   return (
     <>
       <ScrollArea className="flex-1">
-        <div className="p-4 md:p-8 bg-[#f5f5f7] min-h-[calc(100vh-60px)]">
+        <div className="p-4 md:p-8 bg-background min-h-[calc(100vh-60px)]">
           <div className="max-w-5xl mx-auto">
             
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-white mb-2">
                 Gateways de Pagamento
               </h1>
               <p className="text-gray-500">

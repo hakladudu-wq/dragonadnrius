@@ -170,18 +170,18 @@ export default function VendasPage() {
     <>
 
       <ScrollArea className="flex-1">
-        <div className="p-4 md:p-8 bg-[#f5f5f7] min-h-[calc(100vh-60px)]">
+        <div className="p-4 md:p-8 bg-background min-h-[calc(100vh-60px)]">
           <div className="max-w-5xl mx-auto">
             
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-1">Vendas</h1>
+                <h1 className="text-2xl font-bold text-white mb-1">Vendas</h1>
                 <p className="text-gray-500">Acompanhe suas vendas e transacoes</p>
               </div>
               <div className="flex items-center gap-2">
                 {syncResult && (
-                  <span className="text-xs font-medium px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700">
+                  <span className="text-xs font-medium px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400">
                     {syncResult}
                   </span>
                 )}
@@ -262,19 +262,19 @@ export default function VendasPage() {
                   placeholder="Buscar por nome, ID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-9 pl-9 pr-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all"
+                  className="w-full h-9 pl-9 pr-4 bg-[#1c1c1e] border border-[#2a2a2e] rounded-lg text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3a3a3e] focus:border-[#3a3a3e] transition-all"
                 />
               </div>
 
-              <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+              <div className="flex items-center gap-1 bg-[#2a2a2e] p-1 rounded-lg">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => { setActiveTab(tab.id); setCurrentPage(1); }}
                     className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                       activeTab === tab.id
-                        ? "bg-white text-gray-900 shadow-sm"
-                        : "text-gray-500 hover:text-gray-700"
+                        ? "bg-[#1c1c1e] text-white shadow-sm"
+                        : "text-gray-500 hover:text-gray-300"
                     }`}
                   >
                     {tab.label} ({tab.count})
@@ -284,9 +284,9 @@ export default function VendasPage() {
             </div>
 
             {/* Table Layout */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-[48px_200px_180px_100px_1fr] gap-6 px-5 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="grid grid-cols-[48px_200px_180px_100px_1fr] gap-6 px-5 py-3 bg-[#232325] border-b border-[#2a2a2e]">
                 <div />
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Comprador</span>
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Produto</span>
@@ -301,22 +301,22 @@ export default function VendasPage() {
                 </div>
               ) : filteredPayments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full bg-[#2a2a2e] flex items-center justify-center mb-3">
                     <CreditCard className="h-5 w-5 text-gray-400" />
                   </div>
-                  <p className="text-sm font-bold text-gray-900">Nenhuma venda encontrada</p>
+                  <p className="text-sm font-bold text-white">Nenhuma venda encontrada</p>
                   <p className="text-xs text-gray-500 mt-1">As vendas aparecerao aqui</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-[#2a2a2e]">
                   {filteredPayments.map((payment) => (
                     <button
                       key={payment.id}
                       onClick={() => setSelectedPayment(payment)}
-                      className="w-full grid grid-cols-[48px_200px_180px_100px_1fr] gap-6 items-center px-5 py-4 hover:bg-gray-50 transition-colors text-left"
+                      className="w-full grid grid-cols-[48px_200px_180px_100px_1fr] gap-6 items-center px-5 py-4 hover:bg-[#232325] transition-colors text-left"
                     >
                       {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[#3a3a3e] flex items-center justify-center shrink-0">
                         <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-400">
                           <circle cx="12" cy="8" r="4" fill="currentColor"/>
                           <path d="M20 21c0-4.418-3.582-8-8-8s-8 3.582-8 8" fill="currentColor"/>
@@ -325,7 +325,7 @@ export default function VendasPage() {
 
                       {/* Comprador */}
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-gray-900 truncate">{getUserName(payment)}</p>
+                        <p className="text-sm font-bold text-white truncate">{getUserName(payment)}</p>
                         <p className="text-sm font-medium text-gray-500 truncate">
                           {payment.telegram_username ? `@${payment.telegram_username}` : "Telegram User"}
                         </p>
@@ -333,29 +333,29 @@ export default function VendasPage() {
 
                       {/* Produto */}
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-800 truncate">{payment.description || "Pagamento"}</p>
+                        <p className="text-sm font-semibold text-gray-100 truncate">{payment.description || "Pagamento"}</p>
                         <p className="text-sm font-medium text-gray-500">{payment.gateway || "PIX"}</p>
                       </div>
 
                       {/* Data */}
                       <div>
-                        <p className="text-sm font-semibold text-gray-800">{formatDate(payment.created_at).split(",")[0]}</p>
+                        <p className="text-sm font-semibold text-gray-100">{formatDate(payment.created_at).split(",")[0]}</p>
                         <p className="text-sm font-medium text-gray-500">{formatDate(payment.created_at).split(",")[1]?.trim() || ""}</p>
                       </div>
 
                       {/* Valor + Status */}
                       <div className="text-right">
                         <p className={`text-base font-bold ${
-                          payment.status === "approved" ? "text-emerald-600" : 
+                          payment.status === "approved" ? "text-emerald-400" : 
                           payment.status === "pending" ? "text-amber-500" : 
                           "text-gray-500"
                         }`}>
                           {formatCurrency(Number(payment.amount))}
                         </p>
                         <span className={`inline-block mt-1 text-xs font-bold px-2 py-0.5 rounded ${
-                          payment.status === "approved" ? "bg-emerald-100 text-emerald-700" :
-                          payment.status === "pending" ? "bg-amber-100 text-amber-700" :
-                          "bg-gray-100 text-gray-600"
+                          payment.status === "approved" ? "bg-emerald-500/15 text-emerald-400" :
+                          payment.status === "pending" ? "bg-amber-500/15 text-amber-400" :
+                          "bg-[#2a2a2e] text-gray-400"
                         }`}>
                           {payment.status === "approved" ? "Aprovada" : payment.status === "pending" ? "Pendente" : "Rejeitada"}
                         </span>
@@ -372,7 +372,7 @@ export default function VendasPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-[#1c1c1e] border border-[#2a2a2e] text-gray-300 hover:bg-[#232325] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Anterior
@@ -403,7 +403,7 @@ export default function VendasPage() {
                           className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
                             currentPage === page
                               ? "bg-[#1c1c1e] text-white"
-                              : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+                              : "bg-[#1c1c1e] border border-[#2a2a2e] text-gray-300 hover:bg-[#232325]"
                           }`}
                         >
                           {page}
@@ -418,7 +418,7 @@ export default function VendasPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / ITEMS_PER_PAGE), p + 1))}
                   disabled={currentPage >= Math.ceil(totalCount / ITEMS_PER_PAGE)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-[#1c1c1e] border border-[#2a2a2e] text-gray-300 hover:bg-[#232325] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Proximo
                   <ChevronRight className="h-4 w-4" />

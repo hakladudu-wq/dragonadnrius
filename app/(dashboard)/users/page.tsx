@@ -414,7 +414,7 @@ export default function UsersPage() {
         <button
           onClick={fetchData}
           disabled={loading}
-          className="flex items-center gap-2 bg-card px-4 py-2.5 rounded-xl shadow-sm border border-border text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+          className="flex items-center gap-2 bg-card px-4 py-2.5 rounded-xl shadow-sm border border-border text-sm font-medium text-gray-400 hover:bg-[#232325] disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           Atualizar
@@ -433,15 +433,15 @@ export default function UsersPage() {
             />
             <KPICard
               icon={Crown} label="Assinantes" value={kpis.assinantes.toLocaleString("pt-BR")}
-              iconBg="bg-emerald-50" iconColor="text-emerald-600"
+              iconBg="bg-emerald-500/15" iconColor="text-emerald-400"
             />
             <KPICard
               icon={Clock} label="Expirando em 7d" value={kpis.expirando7d.toString()}
-              iconBg="bg-amber-50" iconColor="text-amber-600"
+              iconBg="bg-amber-500/15" iconColor="text-amber-400"
             />
             <KPICard
               icon={TrendingUp} label="Conversao" value={kpis.taxaConversao.toString()} suffix="%"
-              iconBg="bg-blue-50" iconColor="text-blue-600"
+              iconBg="bg-blue-500/15" iconColor="text-blue-400"
             />
           </div>
 
@@ -474,12 +474,12 @@ export default function UsersPage() {
                         className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
                           filtro === tab.key
                             ? "bg-foreground dark:bg-card text-background dark:text-foreground"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            : "bg-[#2a2a2e] text-gray-400 hover:bg-[#3a3a3e]"
                         }`}
                       >
                         {tab.label}
                         <span className={`rounded-md px-1.5 py-0.5 text-xs font-semibold ${
-                          filtro === tab.key ? "bg-card/20 text-background dark:text-foreground" : "bg-gray-200 text-muted-foreground"
+                          filtro === tab.key ? "bg-card/20 text-background dark:text-foreground" : "bg-[#3a3a3e] text-muted-foreground"
                         }`}>
                           {tab.count}
                         </span>
@@ -492,7 +492,7 @@ export default function UsersPage() {
                       placeholder="Buscar..."
                       value={busca}
                       onChange={(e) => setBusca(e.target.value)}
-                      className="w-full sm:w-56 bg-gray-50 pl-9 border-gray-200 rounded-xl h-10 text-sm"
+                      className="w-full sm:w-56 bg-[#232325] pl-9 border-[#2a2a2e] rounded-xl h-10 text-sm"
                     />
                   </div>
                 </div>

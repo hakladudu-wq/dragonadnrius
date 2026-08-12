@@ -627,13 +627,13 @@ export default function CampaignsPage() {
   return (
     <>
       <ScrollArea className="flex-1">
-        <div className="p-4 md:p-8 bg-[#f5f5f7] min-h-[calc(100vh-60px)]">
+        <div className="p-4 md:p-8 bg-background min-h-[calc(100vh-60px)]">
           <div className="max-w-5xl mx-auto">
             
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-1">Remarketing</h1>
+                <h1 className="text-2xl font-bold text-white mb-1">Remarketing</h1>
                 <p className="text-gray-500">Reconquiste leads com campanhas automatizadas</p>
               </div>
               <button 
@@ -703,13 +703,13 @@ export default function CampaignsPage() {
             </div>
 
             {/* Section Toggle Buttons */}
-            <div className="inline-flex items-center gap-1 p-1 bg-gray-100 rounded-full mb-6">
+            <div className="inline-flex items-center gap-1 p-1 bg-[#2a2a2e] rounded-full mb-6">
               <button
                 onClick={() => setActiveSection("campanhas")}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                   activeSection === "campanhas"
                     ? "bg-[#1c1c1e] text-white shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
+                    : "text-gray-400 hover:text-white"
                 }`}
               >
                 <Megaphone className="h-4 w-4" />
@@ -720,7 +720,7 @@ export default function CampaignsPage() {
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                   activeSection === "usuarios"
                     ? "bg-[#1c1c1e] text-white shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
+                    : "text-gray-400 hover:text-white"
                 }`}
               >
                 <Users className="h-4 w-4" />
@@ -740,19 +740,19 @@ export default function CampaignsPage() {
                   placeholder="Buscar campanha..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full h-9 pl-9 pr-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:border-gray-300 transition-all"
+                  className="w-full h-9 pl-9 pr-4 bg-[#1c1c1e] border border-[#2a2a2e] rounded-lg text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3a3a3e] focus:border-[#3a3a3e] transition-all"
                 />
               </div>
 
-              <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+              <div className="flex items-center gap-1 bg-[#2a2a2e] p-1 rounded-lg">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                       activeTab === tab.id
-                        ? "bg-white text-gray-900 shadow-sm"
-                        : "text-gray-500 hover:text-gray-700"
+                        ? "bg-[#1c1c1e] text-white shadow-sm"
+                        : "text-gray-500 hover:text-gray-300"
                     }`}
                   >
                     {tab.label} ({tab.count})
@@ -762,9 +762,9 @@ export default function CampaignsPage() {
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-[1fr_140px_100px_100px_60px] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="grid grid-cols-[1fr_140px_100px_100px_60px] gap-4 px-5 py-3 bg-[#232325] border-b border-[#2a2a2e]">
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Campanha</span>
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Publico</span>
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wide text-center">Enviadas</span>
@@ -779,10 +779,10 @@ export default function CampaignsPage() {
                 </div>
               ) : filteredCampaigns.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full bg-[#2a2a2e] flex items-center justify-center mb-3">
                     <Megaphone className="h-5 w-5 text-gray-400" />
                   </div>
-                  <p className="text-sm font-bold text-gray-900">Nenhuma campanha encontrada</p>
+                  <p className="text-sm font-bold text-white">Nenhuma campanha encontrada</p>
                   <p className="text-xs text-gray-500 mt-1">Crie sua primeira campanha de remarketing</p>
                   <button 
                     onClick={() => setCreateOpen(true)}
@@ -793,19 +793,19 @@ export default function CampaignsPage() {
                   </button>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-[#2a2a2e]">
                   {filteredCampaigns.map((campaign) => {
                     const audience = getAudience(campaign.audience || "not_paid")
                     const Icon = audience.icon
                     const hasMessage = campaign.nodes.some(n => n.type === "message")
                     
                     return (
-                      <div key={campaign.id} className="hover:bg-gray-50 transition-colors">
+                      <div key={campaign.id} className="hover:bg-[#232325] transition-colors">
                         {/* Linha principal */}
                         <div className="grid grid-cols-[1fr_140px_100px_100px_60px] gap-4 items-center px-5 py-4">
                           {/* Nome */}
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-gray-900 truncate">{campaign.name}</p>
+                            <p className="text-sm font-bold text-white truncate">{campaign.name}</p>
                             <p className="text-xs text-gray-500">{formatDate(campaign.created_at)}</p>
                           </div>
 
@@ -817,7 +817,7 @@ export default function CampaignsPage() {
 
 {/* Enviadas */}
                                   <div className="text-center">
-                                    <p className="text-sm font-semibold text-gray-900">
+                                    <p className="text-sm font-semibold text-white">
                                       {campaign.sent_count || 0}
                                       <span className="text-gray-400 font-normal">/{campaign.target_count || 0}</span>
                                     </p>
@@ -832,7 +832,7 @@ export default function CampaignsPage() {
                                   ? "bg-amber-100 text-amber-700"
                                   : !hasMessage
                                     ? "bg-orange-100 text-orange-700"
-                                    : "bg-gray-100 text-gray-600"
+                                    : "bg-[#2a2a2e] text-gray-400"
                             }`}>
                               {campaign.status === "ativa" && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
                               {!hasMessage ? "Pendente" : campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
@@ -843,7 +843,7 @@ export default function CampaignsPage() {
                           <div className="flex justify-end">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <button className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
+                                <button className="w-8 h-8 rounded-lg hover:bg-[#2a2a2e] flex items-center justify-center transition-colors">
                                   <MoreVertical className="h-4 w-4 text-gray-500" />
                                 </button>
                               </DropdownMenuTrigger>
@@ -927,17 +927,17 @@ export default function CampaignsPage() {
             {activeSection === "usuarios" && (
             <div className="space-y-4">
               {/* Info */}
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <p className="text-sm text-gray-600">
+              <div className="bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] p-4">
+                <p className="text-sm text-gray-400">
                   Visualize e gerencie os usuarios de cada bot. Clique em um bot para expandir e ver os publicos segmentados.
                 </p>
               </div>
 
               {/* Bots List */}
               {bots.length === 0 ? (
-                <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+                <div className="bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] p-8 text-center">
                   <Bot className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm font-bold text-gray-900">Nenhum bot encontrado</p>
+                  <p className="text-sm font-bold text-white">Nenhum bot encontrado</p>
                   <p className="text-xs text-gray-500 mt-1">Crie um bot primeiro para ver os usuarios</p>
                 </div>
               ) : (
@@ -949,7 +949,7 @@ export default function CampaignsPage() {
                     const telegramData = telegramDataCache[bot.id]
                     
                     const audiences = [
-                      { id: "all", label: "Todos", count: users.length, color: "bg-gray-100 text-gray-700" },
+                      { id: "all", label: "Todos", count: users.length, color: "bg-[#2a2a2e] text-gray-300" },
                       { id: "started_not_continued", label: "Abandonou", count: getUsersByStatus(users, "started_not_continued").length, color: "bg-amber-100 text-amber-700" },
                       { id: "not_paid", label: "Nao pagou", count: getUsersByStatus(users, "not_paid").length, color: "bg-red-100 text-red-700" },
                       { id: "paid", label: "Pagou", count: getUsersByStatus(users, "paid").length, color: "bg-emerald-100 text-emerald-700" },
@@ -957,11 +957,11 @@ export default function CampaignsPage() {
                     ]
 
                     return (
-                      <div key={bot.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                      <div key={bot.id} className="bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] overflow-hidden">
                         {/* Bot Header */}
                         <button
                           onClick={() => toggleBotExpanded(bot.id)}
-                          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                          className="w-full flex items-center justify-between p-4 hover:bg-[#232325] transition-colors"
                         >
                           <div className="flex items-center gap-3">
                             {telegramData?.photo_url ? (
@@ -976,21 +976,21 @@ export default function CampaignsPage() {
                               </div>
                             )}
                             <div className="text-left">
-                              <p className="font-bold text-gray-900">{bot.name}</p>
+                              <p className="font-bold text-white">{bot.name}</p>
                               <p className="text-xs text-gray-500">
                                 {telegramData?.username ? `@${telegramData.username}` : "@sem_username"}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-semibold text-gray-600">{users.length} usuarios</span>
+                            <span className="text-sm font-semibold text-gray-400">{users.length} usuarios</span>
                             <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                           </div>
                         </button>
 
                         {/* Expanded Content */}
                         {isExpanded && (
-                          <div className="border-t border-gray-100 p-4 bg-gray-50">
+                          <div className="border-t border-[#2a2a2e] p-4 bg-[#232325]">
                             {isLoading ? (
                               <div className="flex items-center justify-center py-8">
                                 <RefreshCw className="h-5 w-5 animate-spin text-gray-400" />
@@ -1011,7 +1011,7 @@ export default function CampaignsPage() {
                                 <div className="flex flex-wrap gap-2">
                                   <button
                                     onClick={() => exportUsers(users, bot.name)}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1c1c1e] border border-[#2a2a2e] text-sm font-medium text-gray-300 hover:bg-[#232325] transition-colors"
                                   >
                                     <Download className="h-4 w-4" />
                                     Exportar CSV
@@ -1021,7 +1021,7 @@ export default function CampaignsPage() {
                                       setImportBotId(bot.id)
                                       setShowImportModal(true)
                                     }}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1c1c1e] border border-[#2a2a2e] text-sm font-medium text-gray-300 hover:bg-[#232325] transition-colors"
                                   >
                                     <Upload className="h-4 w-4" />
                                     Importar
@@ -1040,17 +1040,17 @@ export default function CampaignsPage() {
 
                                 {/* Users Preview */}
                                 {users.length > 0 && (
-                                  <div className="mt-4 pt-4 border-t border-gray-200">
+                                  <div className="mt-4 pt-4 border-t border-[#2a2a2e]">
                                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Ultimos usuarios</p>
                                     <div className="space-y-2">
                                       {users.slice(0, 5).map((user) => (
-                                        <div key={user.id} className="flex items-center justify-between py-2 px-3 bg-white rounded-lg">
+                                        <div key={user.id} className="flex items-center justify-between py-2 px-3 bg-[#1c1c1e] rounded-lg">
                                           <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
+                                            <div className="w-8 h-8 rounded-full bg-[#3a3a3e] flex items-center justify-center text-xs font-bold text-gray-400">
                                               {(user.first_name || "U")[0].toUpperCase()}
                                             </div>
                                             <div>
-                                              <p className="text-sm font-medium text-gray-900">{user.first_name || "Usuario"}</p>
+                                              <p className="text-sm font-medium text-white">{user.first_name || "Usuario"}</p>
                                               <p className="text-xs text-gray-500">{user.username ? `@${user.username}` : user.telegram_user_id}</p>
                                             </div>
                                           </div>
@@ -1059,7 +1059,7 @@ export default function CampaignsPage() {
                                               ? "bg-emerald-100 text-emerald-700"
                                               : user.payment_status === "pending"
                                                 ? "bg-amber-100 text-amber-700"
-                                                : "bg-gray-100 text-gray-600"
+                                                : "bg-[#2a2a2e] text-gray-400"
                                           }`}>
                                             {user.payment_status || user.funnel_step || "inicio"}
                                           </span>
@@ -1424,7 +1424,7 @@ export default function CampaignsPage() {
                     onChange={(e) => setImportText(e.target.value)}
                     placeholder={"123456789, 987654321, 456789123\n\nou um por linha:\n123456789\n987654321\n456789123"}
                     rows={8}
-                    className="w-full px-4 py-3 bg-[#141416] border border-[#2a2a2e] rounded-xl text-white placeholder:text-gray-600 focus:outline-none focus:border-[#bfff00]/50 resize-none font-mono text-sm"
+                    className="w-full px-4 py-3 bg-[#141416] border border-[#2a2a2e] rounded-xl text-white placeholder:text-gray-400 focus:outline-none focus:border-[#bfff00]/50 resize-none font-mono text-sm"
                   />
                   <p className="text-xs text-gray-500 mt-2">
                     Aceita IDs separados por <span className="text-gray-400">virgula</span> ou <span className="text-gray-400">um por linha</span>

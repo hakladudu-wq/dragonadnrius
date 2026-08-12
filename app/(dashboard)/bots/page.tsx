@@ -569,19 +569,19 @@ export default function BotsPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col h-full overflow-hidden bg-[#f8f9fa]">
+    <div className="flex flex-1 flex-col h-full overflow-hidden bg-background">
       {/* Header */}
       <header className="px-4 md:px-8 py-6 flex items-center justify-between flex-shrink-0">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] tracking-tight">Meus Bots</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{bots.length} bot(s) cadastrado(s)</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Meus Bots</h1>
+          <p className="text-sm text-gray-400 mt-0.5">{bots.length} bot(s) cadastrado(s)</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-1 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
+          <div className="hidden sm:flex items-center gap-1 bg-[#1c1c1e] rounded-xl p-1 border border-[#2a2a2e] shadow-sm">
             <button
               onClick={() => setViewMode("grid")}
               className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                viewMode === "grid" ? "bg-[#1c1c1e] text-white" : "text-gray-500 hover:bg-gray-100"
+                viewMode === "grid" ? "bg-[#bfff00] text-[#1c1c1e]" : "text-gray-400 hover:bg-[#2a2a2e]"
               }`}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -589,7 +589,7 @@ export default function BotsPage() {
             <button
               onClick={() => setViewMode("list")}
               className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                viewMode === "list" ? "bg-[#1c1c1e] text-white" : "text-gray-500 hover:bg-gray-100"
+                viewMode === "list" ? "bg-[#bfff00] text-[#1c1c1e]" : "text-gray-400 hover:bg-[#2a2a2e]"
               }`}
             >
               <List className="h-4 w-4" />
@@ -968,7 +968,7 @@ export default function BotsPage() {
               placeholder="Buscar bots..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white rounded-xl border border-gray-200 pl-12 pr-4 py-3 text-sm text-[#1a1a1a] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#bfff00]/30 focus:border-[#bfff00] transition-all shadow-sm"
+              className="w-full bg-[#1c1c1e] rounded-xl border border-[#2a2a2e] pl-12 pr-4 py-3 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#bfff00]/30 focus:border-[#bfff00] transition-all shadow-sm"
             />
           </div>
         </div>
@@ -1194,7 +1194,7 @@ export default function BotsPage() {
           </div>
         ) : (
           /* List View */
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+          <div className="bg-[#1c1c1e] rounded-2xl border border-[#2a2a2e] overflow-hidden shadow-sm">
             {filteredBots.map((bot, index) => {
               const isSelected = selectedBot?.id === bot.id
               const isActive = bot.status === "active"
@@ -1204,42 +1204,42 @@ export default function BotsPage() {
                 <div
                   key={bot.id}
                   onClick={() => setSelectedBot(bot)}
-                  className={`flex items-center gap-4 px-5 py-4 cursor-pointer transition-colors hover:bg-gray-50 ${
-                    index !== filteredBots.length - 1 ? "border-b border-gray-100" : ""
+                  className={`flex items-center gap-4 px-5 py-4 cursor-pointer transition-colors hover:bg-[#2a2a2e]/50 ${
+                    index !== filteredBots.length - 1 ? "border-b border-[#2a2a2e]" : ""
                   } ${isSelected ? "bg-[#bfff00]/5" : ""}`}
                 >
                   {/* Icon */}
                   {isLoadingTelegramData && !telegramDataCache[bot.id] ? (
-                    <div className="w-12 h-12 rounded-xl bg-gray-100 animate-pulse flex-shrink-0" />
+                    <div className="w-12 h-12 rounded-xl bg-[#2a2a2e] animate-pulse flex-shrink-0" />
                   ) : extendedBot.photo_url ? (
                     <img
                       src={extendedBot.photo_url}
                       alt={bot.name}
-                      className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-gray-200"
+                      className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-[#3a3a3e]"
                     />
                   ) : (
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      isActive ? "bg-[#bfff00]/10" : "bg-gray-100"
+                      isActive ? "bg-[#bfff00]/10" : "bg-[#2a2a2e]"
                     }`}>
-                      <BotIcon className={`h-6 w-6 ${isActive ? "text-[#bfff00]" : "text-gray-400"}`} />
+                      <BotIcon className={`h-6 w-6 ${isActive ? "text-[#bfff00]" : "text-gray-500"}`} />
                     </div>
                   )}
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-[#1a1a1a] truncate">{bot.name}</h3>
+                      <h3 className="font-semibold text-white truncate">{bot.name}</h3>
                       <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                         isActive 
-                          ? "bg-[#bfff00]/15 text-[#65a30d]" 
-                          : "bg-gray-100 text-gray-500"
+                          ? "bg-[#bfff00]/15 text-[#bfff00]" 
+                          : "bg-gray-600/30 text-gray-400"
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#bfff00]" : "bg-gray-400"}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-[#bfff00]" : "bg-gray-500"}`} />
                         {isActive ? "ONLINE" : "OFFLINE"}
                       </span>
                     </div>
                     {extendedBot.username && (
-                      <p className="text-sm text-gray-500 truncate mt-0.5 flex items-center gap-1">
+                      <p className="text-sm text-gray-400 truncate mt-0.5 flex items-center gap-1">
                         <AtSign className="h-3 w-3" />
                         {extendedBot.username}
                       </p>
@@ -1249,12 +1249,12 @@ export default function BotsPage() {
                   {/* Stats */}
                   <div className="hidden md:flex items-center gap-6 flex-shrink-0">
                     <div className="text-center">
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase">Leads</p>
-                      <p className="text-lg font-bold text-[#1a1a1a]">{botStatsCache[bot.id]?.leads ?? 0}</p>
+                      <p className="text-[10px] font-semibold text-gray-500 uppercase">Leads</p>
+                      <p className="text-lg font-bold text-white">{botStatsCache[bot.id]?.leads ?? 0}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase">Vendas</p>
-                      <p className="text-lg font-bold text-[#1a1a1a]">{botStatsCache[bot.id]?.vendas ?? 0}</p>
+                      <p className="text-[10px] font-semibold text-gray-500 uppercase">Vendas</p>
+                      <p className="text-lg font-bold text-white">{botStatsCache[bot.id]?.vendas ?? 0}</p>
                     </div>
                   </div>
 
@@ -1266,20 +1266,20 @@ export default function BotsPage() {
                         setSelectedBot(bot)
                         router.push("/fluxos")
                       }}
-                      className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gray-100 hover:bg-[#bfff00] hover:text-[#1c1c1e] text-gray-500 text-xs font-semibold transition-colors"
+                      className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#2a2a2e] hover:bg-[#bfff00] hover:text-[#1c1c1e] text-gray-400 text-xs font-semibold transition-colors"
                     >
                       <ChevronRight className="h-3.5 w-3.5" />
                       Fluxos
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); openConfig(bot) }}
-                      className="w-9 h-9 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-[#1a1a1a] transition-colors"
+                      className="w-9 h-9 rounded-lg hover:bg-[#2a2a2e] flex items-center justify-center text-gray-400 hover:text-white transition-colors"
                     >
                       <Settings className="h-4 w-4" />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDelete(bot.id) }}
-                      className="w-9 h-9 rounded-lg hover:bg-red-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
+                      className="w-9 h-9 rounded-lg hover:bg-red-500/10 flex items-center justify-center text-gray-400 hover:text-red-400 transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
