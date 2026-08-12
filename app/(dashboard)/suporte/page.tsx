@@ -89,7 +89,7 @@ export default function SuportePage() {
 
   return (
     <ScrollArea className="flex-1">
-      <div className="min-h-full bg-[#f3f4f6]">
+      <div className="min-h-full bg-background">
         <div className="max-w-2xl mx-auto px-6 py-10">
           {/* Header */}
           <div className="mb-8">

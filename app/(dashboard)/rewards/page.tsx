@@ -84,7 +84,7 @@ export default function RewardsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#f3f4f6]">
+      <div className="flex-1 flex items-center justify-center bg-background">
         <Loader2 className="h-6 w-6 animate-spin text-[#ccff00]" />
       </div>
     )
@@ -94,7 +94,7 @@ export default function RewardsPage() {
     <>
       
       <ScrollArea className="flex-1">
-        <div className="min-h-full bg-[#f3f4f6]">
+        <div className="min-h-full bg-background">
           <div className="max-w-3xl mx-auto px-6 py-10">
             
             {/* Faturamento */}
@@ -102,29 +102,29 @@ export default function RewardsPage() {
               <p className="text-[11px] uppercase tracking-[0.2em] text-gray-400 font-medium mb-2">
                 Seu Faturamento Total
               </p>
-              <p className="text-5xl font-black text-gray-900 tracking-tight">
+              <p className="text-5xl font-black text-white tracking-tight">
                 R$ {faturamentoAtual.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </p>
               {faturamentoAtual > 0 && proximaMetaIndex >= 0 && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Faltam <span className="font-bold text-gray-900">R$ {faltaParaMeta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span> para a proxima meta
+                <p className="text-sm text-gray-400 mt-2">
+                  Faltam <span className="font-bold text-white">R$ {faltaParaMeta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span> para a proxima meta
                 </p>
               )}
             </div>
 
             {/* Barra de progresso */}
             <div className="mb-16">
-              <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div className="relative h-3 bg-[#2a2a2e] rounded-full overflow-hidden">
                 <div 
                   className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#bfff00] to-[#ccff00] rounded-full transition-all duration-700 ease-out"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
               <div className="flex justify-between mt-2">
-                <span className="text-xs text-gray-600 font-semibold">
+                <span className="text-xs text-gray-400 font-semibold">
                   {activeIndex > 0 ? `R$ ${premiacoes[activeIndex - 1].pontosNum.toLocaleString("pt-BR")}` : "R$ 0"}
                 </span>
-                <span className="text-xs text-gray-900 font-bold">R$ {currentPremio.pontosNum.toLocaleString("pt-BR")}</span>
+                <span className="text-xs text-white font-bold">R$ {currentPremio.pontosNum.toLocaleString("pt-BR")}</span>
               </div>
             </div>
 
@@ -136,8 +136,8 @@ export default function RewardsPage() {
                 disabled={activeIndex === 0}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   activeIndex === 0 
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-                    : 'bg-[#1a1a1a] text-[#ccff00] hover:bg-[#222] hover:scale-110'
+                    ? 'bg-[#2a2a2e] text-gray-600 cursor-not-allowed' 
+                    : 'bg-[#1c1c1e] text-[#ccff00] hover:bg-[#2c2c2e] hover:scale-110'
                 }`}
               >
                 <ChevronLeft className="w-6 h-6" />
@@ -156,7 +156,7 @@ export default function RewardsPage() {
                   />
                   {!isDesbloqueado && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center border border-gray-300">
+                      <div className="w-14 h-14 rounded-full bg-[#2a2a2e] flex items-center justify-center border border-[#3a3a3e]">
                         <Lock className="w-6 h-6 text-gray-400" />
                       </div>
                     </div>
@@ -164,12 +164,12 @@ export default function RewardsPage() {
                 </div>
 
                 {/* Meta */}
-                <span className="text-gray-900 text-xs font-bold tracking-widest mb-2">
+                <span className="text-white text-xs font-bold tracking-widest mb-2">
                   META {currentPremio.pontos}
                 </span>
 
                 {/* Titulo */}
-                <h2 className="text-2xl font-bold text-gray-900 mb-1 text-center">
+                <h2 className="text-2xl font-bold text-white mb-1 text-center">
                   {currentPremio.titulo}
                 </h2>
                 <p className="text-gray-500 text-sm mb-4">
@@ -188,7 +188,7 @@ export default function RewardsPage() {
                       key={idx}
                       onClick={() => setActiveIndex(idx)}
                       className={`w-2 h-2 rounded-full transition-all ${
-                        idx === activeIndex ? 'bg-[#ccff00] w-6' : 'bg-gray-300 hover:bg-gray-400'
+                        idx === activeIndex ? 'bg-[#ccff00] w-6' : 'bg-[#3a3a3e] hover:bg-[#4a4a4e]'
                       }`}
                     />
                   ))}
@@ -200,7 +200,7 @@ export default function RewardsPage() {
                     Resgatar Premio
                   </button>
                 ) : (
-                  <div className="px-10 py-3.5 bg-gray-200 text-gray-600 font-bold text-sm rounded-full">
+                  <div className="px-10 py-3.5 bg-[#2a2a2e] text-gray-400 font-bold text-sm rounded-full">
                     Faltam R$ {faltaParaMeta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                   </div>
                 )}
@@ -212,8 +212,8 @@ export default function RewardsPage() {
                 disabled={activeIndex === premiacoes.length - 1}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   activeIndex === premiacoes.length - 1 
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-                    : 'bg-[#1a1a1a] text-[#ccff00] hover:bg-[#222] hover:scale-110'
+                    ? 'bg-[#2a2a2e] text-gray-600 cursor-not-allowed' 
+                    : 'bg-[#1c1c1e] text-[#ccff00] hover:bg-[#2c2c2e] hover:scale-110'
                 }`}
               >
                 <ChevronRight className="w-6 h-6" />
