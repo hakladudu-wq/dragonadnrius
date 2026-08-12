@@ -5,10 +5,10 @@
  * Acesse /api/debug/logs para ver os logs salvos.
  */
 
-import { getSupabase } from "@/lib/supabase"
+import { getSupabaseAdmin } from "@/lib/supabase"
 
 export type LogLevel = "info" | "warn" | "error" | "debug"
-export type LogCategory = "order_bump" | "payment" | "upsell" | "webhook" | "flow" | "general"
+export type LogCategory = "order_bump" | "payment" | "upsell" | "webhook" | "flow" | "tester" | "general"
 
 interface LogEntry {
   level: LogLevel
@@ -53,9 +53,10 @@ export async function log(entry: LogEntry): Promise<void> {
     memoryLogs.pop()
   }
 
-  // Tentar salvar no banco (não bloqueia se falhar)
+  // Tentar salvar no banco (não bloqueia se falhar).
+  // Usa o cliente admin (service role) para garantir a gravação mesmo com RLS ativo.
   try {
-    const supabase = getSupabase()
+    const supabase = getSupabaseAdmin()
     await supabase.from("debug_logs").insert({
       level: entry.level,
       category: entry.category,
@@ -116,6 +117,17 @@ export const flowLog = {
     log({ level: "error", category: "flow", message, data, ...context }),
   debug: (message: string, data?: Record<string, unknown>, context?: { telegram_user_id?: number; bot_id?: string; flow_id?: string }) =>
     log({ level: "debug", category: "flow", message, data, ...context }),
+}
+
+export const testerLog = {
+  info: (message: string, data?: Record<string, unknown>, context?: { telegram_user_id?: number; bot_id?: string; flow_id?: string }) =>
+    log({ level: "info", category: "tester", message, data, ...context }),
+  warn: (message: string, data?: Record<string, unknown>, context?: { telegram_user_id?: number; bot_id?: string; flow_id?: string }) =>
+    log({ level: "warn", category: "tester", message, data, ...context }),
+  error: (message: string, data?: Record<string, unknown>, context?: { telegram_user_id?: number; bot_id?: string; flow_id?: string }) =>
+    log({ level: "error", category: "tester", message, data, ...context }),
+  debug: (message: string, data?: Record<string, unknown>, context?: { telegram_user_id?: number; bot_id?: string; flow_id?: string }) =>
+    log({ level: "debug", category: "tester", message, data, ...context }),
 }
 
 /**

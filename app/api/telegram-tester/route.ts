@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase"
 import { runSimulation } from "@/lib/telegram-simulation"
 import { processUpdate } from "@/app/api/telegram/webhook/[botId]/route"
+import { testerLog } from "@/lib/logger"
 
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
@@ -9,16 +10,11 @@ export const maxDuration = 60
 // ---------------------------------------------------------------------------
 // Testador de Fluxos (motor real do webhook, em modo simulacao)
 //
-// GET  /api/telegram-tester?key=...            -> lista bots e fluxos
-// POST /api/telegram-tester   { key, ... }     -> roda um update no motor real
+// Acesso livre (sem chave). Lista bots e fluxos direto do banco.
+//
+// GET  /api/telegram-tester            -> lista bots e fluxos
+// POST /api/telegram-tester   { ... }  -> roda um update no motor real
 // ---------------------------------------------------------------------------
-
-/** Valida a chave secreta. Se TELEGRAM_TESTER_KEY nao estiver definida, libera (dev). */
-function checkKey(provided: string | null | undefined): boolean {
-  const expected = process.env.TELEGRAM_TESTER_KEY
-  if (!expected) return true
-  return provided === expected
-}
 
 /** Extrai o prefixo numerico do token do bot (parte antes do ":"). */
 function tokenPrefix(token: string | null | undefined): string | null {
@@ -30,12 +26,7 @@ function tokenPrefix(token: string | null | undefined): string | null {
 // ---------------------------------------------------------------------------
 // GET: lista bots e fluxos vinculados
 // ---------------------------------------------------------------------------
-export async function GET(request: NextRequest) {
-  const key = request.nextUrl.searchParams.get("key")
-  if (!checkKey(key)) {
-    return NextResponse.json({ error: "Chave invalida" }, { status: 401 })
-  }
-
+export async function GET(_request: NextRequest) {
   const supabase = getSupabaseAdmin()
 
   const { data: bots, error: botsError } = await supabase
@@ -88,7 +79,6 @@ export async function GET(request: NextRequest) {
 // POST: roda um update no motor real, em modo simulacao
 // ---------------------------------------------------------------------------
 interface RunBody {
-  key?: string
   botId: string // uuid do bot
   flowId?: string // fluxo a forcar (opcional)
   action: "start" | "callback" | "text"
@@ -109,10 +99,6 @@ export async function POST(request: NextRequest) {
     body = (await request.json()) as RunBody
   } catch {
     return NextResponse.json({ error: "JSON invalido" }, { status: 400 })
-  }
-
-  if (!checkKey(body.key)) {
-    return NextResponse.json({ error: "Chave invalida" }, { status: 401 })
   }
 
   if (!body.botId || !body.session?.userId) {
@@ -175,7 +161,17 @@ export async function POST(request: NextRequest) {
     })
     return NextResponse.json({ ok: true, captures })
   } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err)
+    const errStack = err instanceof Error ? err.stack : undefined
     console.error("[telegram-tester] erro ao rodar update:", err)
-    return NextResponse.json({ error: String(err) }, { status: 500 })
+    // Grava o erro no banco (debug_logs) com o contexto do teste,
+    // para ficar registrado e ser resolvido depois.
+    await testerLog.error(`Erro na simulação (${body.action}): ${errMsg}`, {
+      action: body.action,
+      callbackData: body.callbackData,
+      text: body.text,
+      stack: errStack,
+    }, { bot_id: body.botId, flow_id: body.flowId, telegram_user_id: body.session.userId })
+    return NextResponse.json({ error: errMsg, detail: errStack }, { status: 500 })
   }
 }

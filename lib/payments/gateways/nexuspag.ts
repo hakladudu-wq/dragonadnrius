@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 import type { CreatePixPaymentInput, PixPaymentResult } from "./mercadopago"
+import { paymentLog } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // NexusPag - usa EXATAMENTE a mesma interface do Mercado Pago
@@ -62,6 +63,14 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       console.error("[v0] NexusPag API error:", response.status, errorData)
+      const errMsg = errorData.error || errorData.message || `Erro na API: ${response.status}`
+      await paymentLog.error(`PIX NexusPag falhou: ${errMsg}`, {
+        gateway: "nexuspag",
+        httpStatus: response.status,
+        amount,
+        description,
+        apiResponse: errorData,
+      })
       return {
         success: false,
         paymentId: "",
@@ -69,7 +78,7 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
         qrCodeUrl: "",
         copyPaste: "",
         status: "error",
-        error: errorData.error || errorData.message || `Erro na API: ${response.status}`,
+        error: errMsg,
       }
     }
 
@@ -78,6 +87,12 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
 
     const copyPaste: string = transaction.pix_copia_cola || transaction.pixCopiaCola || ""
     if (!copyPaste) {
+      await paymentLog.error("PIX NexusPag sem codigo copia-e-cola na resposta", {
+        gateway: "nexuspag",
+        amount,
+        description,
+        apiResponse: data,
+      })
       return {
         success: false,
         paymentId: "",
@@ -103,6 +118,12 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
     }
   } catch (error) {
     console.error("[v0] Error creating NexusPag payment:", error)
+    const errMsg = error instanceof Error ? error.message : "Erro desconhecido"
+    await paymentLog.error(`Exceção ao gerar PIX NexusPag: ${errMsg}`, {
+      gateway: "nexuspag",
+      amount,
+      description,
+    })
     return {
       success: false,
       paymentId: "",
@@ -110,7 +131,7 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
       qrCodeUrl: "",
       copyPaste: "",
       status: "error",
-      error: error instanceof Error ? error.message : "Erro desconhecido",
+      error: errMsg,
     }
   }
 }

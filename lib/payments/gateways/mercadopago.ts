@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 import { createPixPayment as nexusCreatePixPayment, checkPaymentStatus as nexusCheckPaymentStatus } from "./nexuspag"
+import { paymentLog } from "@/lib/logger"
 
 export interface CreatePixPaymentInput {
   accessToken: string
@@ -54,6 +55,14 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       console.error("Mercado Pago API error:", errorData)
+      const errMsg = errorData.message || `Erro na API: ${response.status}`
+      await paymentLog.error(`PIX Mercado Pago falhou: ${errMsg}`, {
+        gateway: "mercadopago",
+        httpStatus: response.status,
+        amount,
+        description,
+        apiResponse: errorData,
+      })
       return {
         success: false,
         paymentId: "",
@@ -61,7 +70,7 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
         qrCodeUrl: "",
         copyPaste: "",
         status: "error",
-        error: errorData.message || `Erro na API: ${response.status}`,
+        error: errMsg,
       }
     }
 
@@ -69,6 +78,12 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
 
     const qrCode = data.point_of_interaction?.transaction_data?.qr_code
     if (!qrCode) {
+      await paymentLog.error("PIX Mercado Pago sem QR Code na resposta", {
+        gateway: "mercadopago",
+        amount,
+        description,
+        apiResponse: data,
+      })
       return {
         success: false,
         paymentId: "",
@@ -93,6 +108,12 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
     }
   } catch (error) {
     console.error("Error creating Mercado Pago payment:", error)
+    const errMsg = error instanceof Error ? error.message : "Erro desconhecido"
+    await paymentLog.error(`Exceção ao gerar PIX Mercado Pago: ${errMsg}`, {
+      gateway: "mercadopago",
+      amount,
+      description,
+    })
     return {
       success: false,
       paymentId: "",
@@ -100,7 +121,7 @@ export async function createPixPayment(input: CreatePixPaymentInput): Promise<Pi
       qrCodeUrl: "",
       copyPaste: "",
       status: "error",
-      error: error instanceof Error ? error.message : "Erro desconhecido",
+      error: errMsg,
     }
   }
 }
