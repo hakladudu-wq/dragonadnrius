@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-const SUPABASE_URL = "https://izvulojnfvgsbmhyvqtn.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6dnVsb2puZnZnc2JtaHl2cXRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTk0NTMsImV4cCI6MjA4ODgzNTQ1M30.Djnn3tsrxSGLBR-Bm1dWOpQe0NHCSOWJFZkbbTOk2oM"
+const SUPABASE_URL = "https://sfysxgcxitsewjwjtorz.supabase.co"
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmeXN4Z2N4aXRzZXdqd2p0b3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY1MDkwNzksImV4cCI6MjEwMjA4NTA3OX0.k9AunToqaMM0EPNFyaEvKea5XbUF9s21Z9QpKasAUAo"
 
 // Funcao para calcular datas baseado no periodo
 function getDateRange(period: string): { startDate: string; endDate: string } | null {

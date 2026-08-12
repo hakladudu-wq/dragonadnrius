@@ -830,7 +830,7 @@ CREATE TABLE IF NOT EXISTS checkout_leads (
 
 CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_user_id ON dragon_bio_sites(user_id);
 CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_slug ON dragon_bio_sites(slug);
-CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_pixel ON dragon_bio_sites((pixel_config IS NOT NULL));
+CREATE INDEX IF NOT EXISTS idx_dragon_bio_sites_pixel ON dragon_bio_sites(id) WHERE pixel_config IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_dragon_bio_links_site_id ON dragon_bio_links(site_id);
 CREATE INDEX IF NOT EXISTS idx_checkout_leads_site_id ON checkout_leads(site_id);
 CREATE INDEX IF NOT EXISTS idx_checkout_leads_created_at ON checkout_leads(created_at DESC);
@@ -982,6 +982,7 @@ CREATE TABLE IF NOT EXISTS subscription_notifications (
   days_before INTEGER,
   sent_at TIMESTAMPTZ DEFAULT NOW(),
   subscription_expires_at TIMESTAMPTZ NOT NULL,
+  subscription_expires_date DATE GENERATED ALWAYS AS ((subscription_expires_at AT TIME ZONE 'UTC')::date) STORED,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -989,7 +990,7 @@ CREATE INDEX IF NOT EXISTS idx_subscription_notifications_bot_user
   ON subscription_notifications(bot_user_id, notification_type, subscription_expires_at);
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_subscription_notifications_unique 
-  ON subscription_notifications(bot_user_id, flow_id, notification_type, days_before, DATE(subscription_expires_at));
+  ON subscription_notifications(bot_user_id, flow_id, notification_type, days_before, subscription_expires_date);
 
 -- ============================================
 -- PARTE 14: BOT MESSAGES
