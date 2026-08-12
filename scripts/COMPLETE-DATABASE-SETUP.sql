@@ -982,6 +982,7 @@ CREATE TABLE IF NOT EXISTS subscription_notifications (
   days_before INTEGER,
   sent_at TIMESTAMPTZ DEFAULT NOW(),
   subscription_expires_at TIMESTAMPTZ NOT NULL,
+  subscription_expires_date DATE GENERATED ALWAYS AS ((subscription_expires_at AT TIME ZONE 'UTC')::date) STORED,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -989,7 +990,7 @@ CREATE INDEX IF NOT EXISTS idx_subscription_notifications_bot_user
   ON subscription_notifications(bot_user_id, notification_type, subscription_expires_at);
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_subscription_notifications_unique 
-  ON subscription_notifications(bot_user_id, flow_id, notification_type, days_before, DATE(subscription_expires_at));
+  ON subscription_notifications(bot_user_id, flow_id, notification_type, days_before, subscription_expires_date);
 
 -- ============================================
 -- PARTE 14: BOT MESSAGES
