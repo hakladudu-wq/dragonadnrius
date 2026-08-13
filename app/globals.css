@@ -308,42 +308,93 @@ textarea[class*="bg-[#0"] {
   color-scheme: dark !important;
 }
 
-/* Scoped light theme for full-screen editors (Dragon Sites, Redirecionamento, etc.)
-   These editors are designed on a white canvas. The app is forced-dark globally,
-   so we re-declare the light tokens locally to stop shadcn inputs/tabs from
-   inheriting the dark theme (which caused washed-out gray inputs). */
-.editor-light {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 9%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 9%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 45%;
+/* Scoped dark theme for full-screen editors (Dragon Sites, Redirecionamento, etc.)
+   The editor chrome (header, side panel, cards, inputs) is styled with hardcoded
+   light utility classes. Instead of rewriting hundreds of classes, we remap the
+   common light utilities to dark equivalents inside `.editor-dark`, matching the
+   rest of the app. The live preview (the phone mockup) is wrapped in
+   `.editor-canvas`, where the same utilities are reset back to their light values
+   so the previewed page keeps rendering exactly as it will look live. */
+.editor-dark {
+  --background: 0 0% 5%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 5%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 60%;
   --accent: 78 85% 55%;
-  --accent-foreground: 0 0% 9%;
-  --border: 0 0% 92%;
-  --input: 0 0% 92%;
+  --accent-foreground: 0 0% 5%;
+  --border: 0 0% 16%;
+  --input: 0 0% 16%;
   --ring: 78 85% 55%;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
-.editor-light input,
-.editor-light textarea,
-.editor-light select {
-  color-scheme: light;
-  caret-color: #111827;
+.editor-dark input,
+.editor-dark textarea,
+.editor-dark select {
+  color-scheme: dark;
+  caret-color: #e5e5e5;
 }
 
-.editor-light input::placeholder,
-.editor-light textarea::placeholder {
-  color: #9ca3af;
+.editor-dark input::placeholder,
+.editor-dark textarea::placeholder {
+  color: #6b7280;
 }
+
+/* --- Remap hardcoded light utilities to dark inside the editor chrome --- */
+.editor-dark .bg-white { background-color: #141414 !important; }
+.editor-dark .bg-gray-50 { background-color: #1a1a1a !important; }
+.editor-dark .bg-gray-100 { background-color: #1f1f1f !important; }
+.editor-dark .bg-gray-200 { background-color: #292929 !important; }
+.editor-dark .bg-\[\#f4f5f8\] { background-color: #0d0d0d !important; }
+
+.editor-dark .text-gray-900,
+.editor-dark .text-gray-800,
+.editor-dark .text-gray-700 { color: #f5f5f5 !important; }
+.editor-dark .text-gray-600,
+.editor-dark .text-gray-500 { color: #a3a3a3 !important; }
+.editor-dark .text-gray-400,
+.editor-dark .text-gray-300 { color: #6b7280 !important; }
+
+.editor-dark .border-gray-100,
+.editor-dark .border-gray-200,
+.editor-dark .border-gray-300 { border-color: #292929 !important; }
+.editor-dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.editor-dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #292929 !important; }
+
+.editor-dark .hover\:bg-gray-50:hover,
+.editor-dark .hover\:bg-gray-100:hover { background-color: #1f1f1f !important; }
+.editor-dark .hover\:bg-gray-200:hover { background-color: #333333 !important; }
+.editor-dark .hover\:text-gray-900:hover,
+.editor-dark .hover\:text-gray-700:hover { color: #ffffff !important; }
+
+/* Active tab / segmented control: lift it above the darker track */
+.editor-dark .data-\[state\=active\]\:bg-white[data-state="active"] {
+  background-color: #2e2e2e !important;
+}
+
+/* --- Reset the utilities back to light inside the live preview canvas --- */
+.editor-dark .editor-canvas .bg-white { background-color: #ffffff !important; }
+.editor-dark .editor-canvas .bg-gray-50 { background-color: #f9fafb !important; }
+.editor-dark .editor-canvas .bg-gray-100 { background-color: #f3f4f6 !important; }
+.editor-dark .editor-canvas .bg-gray-200 { background-color: #e5e7eb !important; }
+.editor-dark .editor-canvas .text-gray-900 { color: #111827 !important; }
+.editor-dark .editor-canvas .text-gray-800 { color: #1f2937 !important; }
+.editor-dark .editor-canvas .text-gray-700 { color: #374151 !important; }
+.editor-dark .editor-canvas .text-gray-600 { color: #4b5563 !important; }
+.editor-dark .editor-canvas .text-gray-500 { color: #6b7280 !important; }
+.editor-dark .editor-canvas .text-gray-400 { color: #9ca3af !important; }
+.editor-dark .editor-canvas .text-gray-300 { color: #d1d5db !important; }
+.editor-dark .editor-canvas .border-gray-100 { border-color: #f3f4f6 !important; }
+.editor-dark .editor-canvas .border-gray-200 { border-color: #e5e7eb !important; }
+.editor-dark .editor-canvas .border-gray-300 { border-color: #d1d5db !important; }
 
 input[class*="bg-[#2"]:-webkit-autofill,
 input[class*="bg-[#2"]:-webkit-autofill:hover,

@@ -296,7 +296,7 @@ body: JSON.stringify({
   }
 
   return (
-    <div className="editor-light flex flex-col h-full overflow-hidden bg-white text-foreground">
+    <div className="editor-dark flex flex-col h-full overflow-hidden bg-white text-foreground">
       {/* Top Header */}
       <header className="h-14 border-b border-gray-200 flex items-center justify-between px-4 bg-white flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -907,9 +907,9 @@ body: JSON.stringify({
         </div>
 
         {/* Preview Area */}
-        <div className="flex-1 bg-[#f4f5f8] flex items-center justify-center p-6 overflow-hidden">
-          {/* Phone Frame */}
-          <div className="relative">
+          <div className="flex-1 bg-[#f4f5f8] flex items-center justify-center p-6 overflow-hidden">
+            {/* Phone Frame */}
+            <div className="editor-canvas relative">
             {/* Phone outer frame */}
             <div className="w-[280px] h-[580px] bg-black rounded-[40px] p-[10px] shadow-2xl">
               {/* Phone inner screen */}

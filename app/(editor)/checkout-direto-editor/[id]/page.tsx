@@ -138,7 +138,7 @@ body: JSON.stringify({
   }
 
   return (
-    <div className="editor-light min-h-screen bg-gray-50 flex text-foreground">
+    <div className="editor-dark min-h-screen bg-gray-50 flex text-foreground">
       {/* Sidebar Editor */}
       <div className="w-[400px] bg-white border-r flex flex-col">
         {/* Header */}
@@ -432,7 +432,7 @@ body: JSON.stringify({
 
       {/* Preview Panel */}
       <div className="flex-1 bg-gray-100 flex items-center justify-center p-8 overflow-hidden">
-        <div className="w-[375px] h-[700px] flex-shrink-0 bg-gray-800 rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
+        <div className="editor-canvas w-[375px] h-[700px] flex-shrink-0 bg-gray-800 rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
           {/* Phone notch */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-2xl z-20" />
           

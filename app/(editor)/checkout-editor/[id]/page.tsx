@@ -210,7 +210,7 @@ body: JSON.stringify({
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-background">
+    <div className="editor-dark flex flex-col h-screen overflow-hidden bg-background">
       {/* Header */}
       <header className="h-14 border-b border-border flex items-center justify-between px-4 bg-card flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -710,8 +710,8 @@ body: JSON.stringify({
         </div>
 
         {/* Preview Panel */}
-        <div className="flex-1 bg-gray-100 flex items-center justify-center p-8 overflow-hidden">
-          <div className="w-[375px] h-[700px] flex-shrink-0 bg-gray-800 rounded-[50px] p-3 shadow-2xl relative">
+          <div className="flex-1 bg-gray-100 flex items-center justify-center p-8 overflow-hidden">
+            <div className="editor-canvas w-[375px] h-[700px] flex-shrink-0 bg-gray-800 rounded-[50px] p-3 shadow-2xl relative">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-2xl z-20" />
             
             <div 
