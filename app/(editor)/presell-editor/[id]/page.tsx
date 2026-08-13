@@ -261,7 +261,7 @@ body: JSON.stringify({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push("/biolink")}
+            onClick={() => router.push(presellType === "redirect" ? "/redirecionamento" : "/biolink")}
             className="h-8 w-8 rounded-lg text-gray-500 hover:text-gray-900"
           >
             <ChevronLeft className="h-4 w-4" />
