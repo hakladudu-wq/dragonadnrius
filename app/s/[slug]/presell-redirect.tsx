@@ -5,6 +5,7 @@ import Image from "next/image"
 
 type RedirectData = {
   redirectUrl: string
+  instantRedirect?: boolean
   delay: number
   message: string
   fallbackText: string
@@ -24,7 +25,16 @@ export function PresellRedirect({ data }: { data: RedirectData }) {
     setIsMobile(window.innerWidth < 768)
   }, [])
 
+  // Modo automatico: redireciona na hora, sem exibir a tela de carregamento
   useEffect(() => {
+    if (data.instantRedirect && data.redirectUrl) {
+      window.location.replace(data.redirectUrl)
+    }
+  }, [data.instantRedirect, data.redirectUrl])
+
+  useEffect(() => {
+    if (data.instantRedirect) return
+
     if (countdown <= 0 && data.redirectUrl) {
       window.location.href = data.redirectUrl
       return
@@ -35,7 +45,12 @@ export function PresellRedirect({ data }: { data: RedirectData }) {
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [countdown, data.redirectUrl])
+  }, [countdown, data.redirectUrl, data.instantRedirect])
+
+  // Em modo automatico nao renderiza a tela azul
+  if (data.instantRedirect) {
+    return null
+  }
 
   const bgColor = data.background?.color || "#0088cc"
   const bgImage = isMobile 

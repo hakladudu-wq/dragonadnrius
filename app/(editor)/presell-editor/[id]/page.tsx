@@ -60,6 +60,7 @@ type ThankYouData = {
 
 type RedirectData = {
   redirectUrl: string
+  instantRedirect: boolean
   delay: number
   message: string
   fallbackText: string
@@ -111,6 +112,7 @@ const defaultThankYou: ThankYouData = {
 
 const defaultRedirect: RedirectData = {
   redirectUrl: "",
+  instantRedirect: false,
   delay: 2,
   message: "Redirecionando...",
   fallbackText: "Clique aqui se nao for redirecionado",
@@ -504,42 +506,73 @@ body: JSON.stringify({
 
                     <div>
                       <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
-                        Delay (segundos)
+                        Modo de Redirecionamento
                       </Label>
-                      <Input
-                        type="number"
-                        value={redirectData.delay}
-                        onChange={(e) => { setRedirectData({ ...redirectData, delay: parseInt(e.target.value) || 0 }); setSaved(false) }}
-                        className="h-10 text-sm"
-                        min={0}
-                        max={30}
-                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => { setRedirectData({ ...redirectData, instantRedirect: false }); setSaved(false) }}
+                          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${!redirectData.instantRedirect ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                        >
+                          Com tela
+                        </button>
+                        <button
+                          onClick={() => { setRedirectData({ ...redirectData, instantRedirect: true }); setSaved(false) }}
+                          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${redirectData.instantRedirect ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                        >
+                          Automatico
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
+                        {redirectData.instantRedirect
+                          ? "Redireciona na hora, sem exibir a tela de carregamento."
+                          : "Exibe a tela de carregamento antes de redirecionar."}
+                      </p>
                     </div>
 
-                    <div>
-  <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
-  Mensagem
-  </Label>
-  <Input
-  value={redirectData.message}
-  onChange={(e) => { setRedirectData({ ...redirectData, message: e.target.value }); setSaved(false) }}
-  className="h-10 text-sm"
-  placeholder="Redirecionando..."
-  />
-  </div>
+                    {!redirectData.instantRedirect && (
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Delay (segundos)
+                        </Label>
+                        <Input
+                          type="number"
+                          value={redirectData.delay}
+                          onChange={(e) => { setRedirectData({ ...redirectData, delay: parseInt(e.target.value) || 0 }); setSaved(false) }}
+                          className="h-10 text-sm"
+                          min={0}
+                          max={30}
+                        />
+                      </div>
+                    )}
 
-  <div>
-  <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
-  Texto do Link Fallback
-  </Label>
-  <Input
-  value={redirectData.fallbackText}
-  onChange={(e) => { setRedirectData({ ...redirectData, fallbackText: e.target.value }); setSaved(false) }}
-  className="h-10 text-sm"
-  placeholder="Clique aqui se nao for redirecionado"
-  />
-  </div>
-  </div>
+                    {!redirectData.instantRedirect && (
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Mensagem
+                        </Label>
+                        <Input
+                          value={redirectData.message}
+                          onChange={(e) => { setRedirectData({ ...redirectData, message: e.target.value }); setSaved(false) }}
+                          className="h-10 text-sm"
+                          placeholder="Redirecionando..."
+                        />
+                      </div>
+                    )}
+
+                    {!redirectData.instantRedirect && (
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Texto do Link Fallback
+                        </Label>
+                        <Input
+                          value={redirectData.fallbackText}
+                          onChange={(e) => { setRedirectData({ ...redirectData, fallbackText: e.target.value }); setSaved(false) }}
+                          className="h-10 text-sm"
+                          placeholder="Clique aqui se nao for redirecionado"
+                        />
+                      </div>
+                    )}
+                  </div>
                 )}
               </TabsContent>
 
@@ -919,6 +952,19 @@ body: JSON.stringify({
                       backgroundImage: bg.type === "image" && bg.imageMobile ? `url(${bg.imageMobile})` : undefined
                     }}
                   >
+                    {redirectData.instantRedirect ? (
+                      <div className="text-center px-6">
+                        <div className="w-14 h-14 rounded-full bg-white/15 flex items-center justify-center mx-auto mb-4">
+                          <ExternalLink className="w-6 h-6 text-white" />
+                        </div>
+                        <p className="text-white text-sm font-medium mb-1">
+                          Redirecionamento automatico
+                        </p>
+                        <p className="text-white/70 text-xs">
+                          A tela nao sera exibida para o visitante.
+                        </p>
+                      </div>
+                    ) : (
                     <div className="text-center">
                       {/* Circulo com logo do Telegram */}
                       <div 
@@ -941,6 +987,7 @@ body: JSON.stringify({
                         {redirectData.fallbackText || "Clique aqui se nao for redirecionado"}
                       </p>
                     </div>
+                    )}
                   </div>
                   )
                 })()}
