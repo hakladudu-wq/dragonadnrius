@@ -66,6 +66,11 @@ export type DragonBioSite = {
   page_type?: "presell" | "conversion" | "dragonbio" | "checkout"
 }
 
+// Redirects tem sua propria area (Redirecionamento) e nao devem aparecer no Dragon Sites
+function isRedirect(site: any): boolean {
+  return site?.presell_type === "redirect" || (typeof site?.slug === "string" && site.slug.startsWith("presell-redirect"))
+}
+
 // Funcao para determinar o tipo da pagina pelo slug ou page_type
 function getPageTypeFromSite(site: DragonBioSite): "presell" | "conversion" | "dragonbio" | "checkout" {
   // Primeiro verifica se tem page_type definido
@@ -376,7 +381,7 @@ export default function BioLinkPage() {
     )
   }
 
-  const dragonBioSites = sites
+  const dragonBioSites = sites.filter((s) => !isRedirect(s))
   const hasPages = dragonBioSites.length > 0
   const totalPages = dragonBioSites.length
   const totalVisitas = dragonBioSites.reduce((acc, s) => acc + (s.views || 0), 0)
