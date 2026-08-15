@@ -7,6 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { 
   ChevronLeft, 
   Palette,
@@ -21,9 +29,57 @@ import {
   Image as ImageIcon,
   Upload,
   Activity,
+  Shuffle,
+  Pencil,
+  RefreshCw,
+  Globe,
+  Plus,
+  X,
+  Workflow,
+  Bot as BotIcon,
+  Shield,
 } from "lucide-react"
 import { PixelConfigPanel, PixelConfig } from "@/components/dragon-sites/pixel-config"
+import { useBots } from "@/lib/bot-context"
+import { useAuth } from "@/lib/auth-context"
+import { supabase } from "@/lib/supabase"
+import { getDomains, addDomain, type RedirectDomain } from "@/lib/redirect-domains"
 import { toast } from "sonner"
+
+type FlowLite = { id: string; name: string }
+
+type RedirectConfig = {
+  domain: string
+  slugType: "random" | "custom"
+  active: boolean
+  cloaker: boolean
+  cloakerV2: boolean
+  destino: "telegram-bot" | "url"
+  botId: string | null
+  botName: string | null
+  customUrl: string | null
+  flows: FlowLite[]
+}
+
+const defaultRedirectConfig: RedirectConfig = {
+  domain: "",
+  slugType: "custom",
+  active: true,
+  cloaker: false,
+  cloakerV2: false,
+  destino: "telegram-bot",
+  botId: null,
+  botName: null,
+  customUrl: null,
+  flows: [],
+}
+
+function randomSlug(len = 8) {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+  let out = ""
+  for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)]
+  return out
+}
 
 // Types para cada tipo de presell
 type AgeVerificationData = {
@@ -128,6 +184,8 @@ export default function PresellEditorPage({ params }: PageProps) {
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { bots } = useBots()
+  const { session } = useAuth()
   
   const [loading, setLoading] = useState(true)
   const [site, setSite] = useState<any>(null)
@@ -135,12 +193,62 @@ export default function PresellEditorPage({ params }: PageProps) {
   const [ageData, setAgeData] = useState<AgeVerificationData>(defaultAgeVerification)
   const [thankYouData, setThankYouData] = useState<ThankYouData>(defaultThankYou)
   const [redirectData, setRedirectData] = useState<RedirectData>(defaultRedirect)
+  const [redirectConfig, setRedirectConfig] = useState<RedirectConfig>(defaultRedirectConfig)
+  const [flows, setFlows] = useState<FlowLite[]>([])
+  const [domains, setDomains] = useState<RedirectDomain[]>([])
+  const [addingDomain, setAddingDomain] = useState(false)
+  const [newDomain, setNewDomain] = useState("")
   const [activeTab, setActiveTab] = useState("content")
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [siteName, setSiteName] = useState("")
 const [siteSlug, setSiteSlug] = useState("")
   const [pixelConfig, setPixelConfig] = useState<PixelConfig>({ provider: null })
+
+  // Carrega dominios (localStorage) e fluxos do usuario para o painel de redirect
+  useEffect(() => {
+    if (!session?.userId) return
+    setDomains(getDomains(session.userId))
+    ;(async () => {
+      const { data } = await supabase
+        .from("flows")
+        .select("id, name")
+        .eq("user_id", session.userId)
+        .order("created_at", { ascending: false })
+      if (data) setFlows(data as FlowLite[])
+    })()
+  }, [session?.userId])
+
+  // Resolve a URL de destino a partir da configuracao (bot ou URL personalizada)
+  const resolveRedirectUrl = (cfg: RedirectConfig): string => {
+    if (cfg.destino === "url") return (cfg.customUrl || "").trim()
+    const bot = bots.find((b) => b.id === cfg.botId)
+    return bot?.group_link || ""
+  }
+
+  // Atualiza a config e sincroniza a URL de redirecionamento efetiva
+  const updateRedirectConfig = (patch: Partial<RedirectConfig>) => {
+    setRedirectConfig((prev) => {
+      const next = { ...prev, ...patch }
+      const resolved = resolveRedirectUrl(next)
+      if (resolved) setRedirectData((rd) => ({ ...rd, redirectUrl: resolved }))
+      return next
+    })
+    setSaved(false)
+  }
+
+  const availableFlows = flows.filter((f) => !redirectConfig.flows.some((s) => s.id === f.id))
+
+  const handleAddDomain = () => {
+    if (!session?.userId || !newDomain.trim()) return
+    const list = addDomain(session.userId, newDomain)
+    setDomains(list)
+    const normalized = newDomain.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "")
+    updateRedirectConfig({ domain: normalized })
+    setNewDomain("")
+    setAddingDomain(false)
+    toast.success("Dominio adicionado!")
+  }
   
   useEffect(() => {
   const typeParam = searchParams.get("type") as PresellType | null
@@ -175,6 +283,9 @@ const [siteSlug, setSiteSlug] = useState("")
 if (data.site.page_data.redirectData) {
   setRedirectData({ ...defaultRedirect, ...data.site.page_data.redirectData })
   }
+  if (data.site.page_data.redirectConfig) {
+  setRedirectConfig({ ...defaultRedirectConfig, ...data.site.page_data.redirectConfig })
+  }
   }
   // Carregar configuracao do pixel
   if (data.site.pixel_config) {
@@ -192,11 +303,22 @@ if (data.site.page_data.redirectData) {
   const handleSave = async () => {
     try {
       setIsSaving(true)
-      
+
+      // Para redirect, resolve a URL efetiva do destino (bot ou URL) antes de salvar
+      let finalRedirectData = redirectData
+      if (presellType === "redirect") {
+        const resolved = resolveRedirectUrl(redirectConfig)
+        if (resolved) {
+          finalRedirectData = { ...redirectData, redirectUrl: resolved }
+          setRedirectData(finalRedirectData)
+        }
+      }
+
       const pageData = {
         ageData,
         thankYouData,
-        redirectData,
+        redirectData: finalRedirectData,
+        redirectConfig,
       }
       
       const res = await fetch(`/api/dragon-bio/${id}`, {
@@ -818,6 +940,274 @@ body: JSON.stringify({
                       />
                     </div>
                   </div>
+
+                  {presellType === "redirect" && (
+                    <div className="flex flex-col gap-5 border-t border-gray-100 pt-5 mt-2">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-gray-400" />
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide block">
+                          Configuracoes do Redirect
+                        </Label>
+                      </div>
+
+                      {/* Toggles: Ativo / Cloaker / Cloaker V2 */}
+                      <div className="flex flex-col gap-3 rounded-lg border border-gray-100 bg-gray-50 p-3">
+                        <label className="flex items-center justify-between cursor-pointer">
+                          <span className="text-sm font-medium text-gray-700">Ativo</span>
+                          <Switch
+                            checked={redirectConfig.active}
+                            onCheckedChange={(v) => updateRedirectConfig({ active: v })}
+                          />
+                        </label>
+                        <label className="flex items-center justify-between cursor-pointer">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-700">Cloaker</span>
+                            <span className="text-[11px] text-gray-400">Protege sua pagina de robos e revisores.</span>
+                          </div>
+                          <Switch
+                            checked={redirectConfig.cloaker}
+                            onCheckedChange={(v) => updateRedirectConfig({ cloaker: v })}
+                          />
+                        </label>
+                        <label className="flex items-center justify-between cursor-pointer">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-700">Cloaker V2</span>
+                            <span className="text-[11px] text-gray-400">Camada extra de protecao avancada.</span>
+                          </div>
+                          <Switch
+                            checked={redirectConfig.cloakerV2}
+                            onCheckedChange={(v) => updateRedirectConfig({ cloakerV2: v })}
+                          />
+                        </label>
+                      </div>
+
+                      {/* Tipo de slug */}
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Tipo de slug
+                        </Label>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              updateRedirectConfig({ slugType: "random" })
+                              setSiteSlug(randomSlug())
+                            }}
+                            className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2 px-3 text-xs font-medium transition-all ${
+                              redirectConfig.slugType === "random"
+                                ? "bg-gray-900 text-white"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            <Shuffle className="h-3.5 w-3.5" />
+                            Aleatorio
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateRedirectConfig({ slugType: "custom" })}
+                            className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2 px-3 text-xs font-medium transition-all ${
+                              redirectConfig.slugType === "custom"
+                                ? "bg-gray-900 text-white"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                            Personalizado
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Dominio */}
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Dominio
+                        </Label>
+                        <Select
+                          value={redirectConfig.domain || (domains[0]?.host ?? "")}
+                          onValueChange={(v) => updateRedirectConfig({ domain: v })}
+                        >
+                          <SelectTrigger className="h-10 text-sm">
+                            <span className="flex items-center gap-2">
+                              <Globe className="h-4 w-4 text-gray-400" />
+                              <SelectValue placeholder="Selecione o dominio" />
+                            </span>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {domains.map((d) => (
+                              <SelectItem key={d.id} value={d.host}>
+                                {d.host}
+                                {d.isDefault ? " (padrao)" : ""}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {addingDomain ? (
+                          <div className="mt-2 flex items-center gap-2">
+                            <Input
+                              value={newDomain}
+                              onChange={(e) => setNewDomain(e.target.value)}
+                              placeholder="meudominio.com"
+                              className="h-9 text-sm"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.nativeEvent.isComposing) handleAddDomain()
+                              }}
+                            />
+                            <Button size="icon" onClick={handleAddDomain} className="h-9 w-9 shrink-0">
+                              <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => {
+                                setAddingDomain(false)
+                                setNewDomain("")
+                              }}
+                              className="h-9 w-9 shrink-0"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setAddingDomain(true)}
+                            className="mt-2 w-full justify-center border-dashed text-xs"
+                          >
+                            <Plus className="mr-1.5 h-3.5 w-3.5" />
+                            Adicionar dominio proprio
+                          </Button>
+                        )}
+                      </div>
+
+                      {/* Destino */}
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Destino
+                        </Label>
+                        <Select
+                          value={redirectConfig.destino}
+                          onValueChange={(v) => {
+                            const destino = v as "telegram-bot" | "url"
+                            const bot = bots.find((b) => b.id === redirectConfig.botId) || bots[0]
+                            updateRedirectConfig({
+                              destino,
+                              botId: destino === "telegram-bot" ? bot?.id ?? null : redirectConfig.botId,
+                              botName: destino === "telegram-bot" ? bot?.name ?? null : redirectConfig.botName,
+                            })
+                          }}
+                        >
+                          <SelectTrigger className="h-10 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="telegram-bot">
+                              <span className="flex items-center gap-2">
+                                <BotIcon className="h-4 w-4" />
+                                Telegram (Bot)
+                              </span>
+                            </SelectItem>
+                            <SelectItem value="url">
+                              <span className="flex items-center gap-2">
+                                <Link2 className="h-4 w-4" />
+                                URL personalizada
+                              </span>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        {redirectConfig.destino === "telegram-bot" ? (
+                          bots.length === 0 ? (
+                            <p className="mt-2 rounded-lg bg-gray-50 p-2 text-xs text-gray-500">
+                              Nenhum bot cadastrado. Adicione um bot para usar esse destino.
+                            </p>
+                          ) : (
+                            <Select
+                              value={redirectConfig.botId ?? ""}
+                              onValueChange={(botId) => {
+                                const bot = bots.find((b) => b.id === botId)
+                                updateRedirectConfig({ botId, botName: bot?.name ?? null })
+                              }}
+                            >
+                              <SelectTrigger className="mt-2 h-10 text-sm">
+                                <SelectValue placeholder="Selecione o bot" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {bots.map((b) => (
+                                  <SelectItem key={b.id} value={b.id}>
+                                    {b.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )
+                        ) : (
+                          <Input
+                            value={redirectConfig.customUrl ?? ""}
+                            onChange={(e) => updateRedirectConfig({ customUrl: e.target.value })}
+                            placeholder="https://t.me/seu_bot"
+                            className="mt-2 h-10 text-sm font-mono"
+                          />
+                        )}
+                      </div>
+
+                      {/* Fluxos */}
+                      <div>
+                        <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-2.5 block">
+                          Fluxos
+                        </Label>
+                        <div className="min-h-[56px] rounded-lg border border-gray-100 bg-gray-50 p-3">
+                          {redirectConfig.flows.length === 0 ? (
+                            <p className="py-2 text-center text-xs text-gray-400">Nenhum fluxo selecionado</p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {redirectConfig.flows.map((f) => (
+                                <span
+                                  key={f.id}
+                                  className="flex items-center gap-1.5 rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-white"
+                                >
+                                  <Workflow className="h-3 w-3" />
+                                  {f.name}
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      updateRedirectConfig({
+                                        flows: redirectConfig.flows.filter((x) => x.id !== f.id),
+                                      })
+                                    }
+                                    aria-label={`Remover ${f.name}`}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <Select
+                          value=""
+                          onValueChange={(id) => {
+                            const flow = flows.find((f) => f.id === id)
+                            if (flow) updateRedirectConfig({ flows: [...redirectConfig.flows, flow] })
+                          }}
+                          disabled={availableFlows.length === 0}
+                        >
+                          <SelectTrigger className="mt-2 h-10 text-sm">
+                            <SelectValue
+                              placeholder={availableFlows.length === 0 ? "Nenhum fluxo disponivel" : "Adicionar fluxo..."}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableFlows.map((f) => (
+                              <SelectItem key={f.id} value={f.id}>
+                                {f.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="border-t border-gray-100 pt-5 mt-2">
                     <Label className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-3 block">
